@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="edittext_height">50dp</dimen>
+    <dimen name="margin_start">16dp</dimen>
+    <dimen name="margin_end">16dp</dimen>
+    <dimen name="margin_top">8dp</dimen>
+    <dimen name="margin_bottom_imageview">40dp</dimen>
+    <dimen name="button_size">16sp</dimen>
+    <dimen name="padding_button">16dp</dimen>
+
+    <dimen name="text_size_edittext">20sp</dimen>
+    <dimen name="button_width">140dp</dimen>
+    <dimen name="option_button_width">100dp</dimen>
+
+    <dimen name="nav_height">250dp</dimen>
+
+    <dimen name="toolbar_size">56dp</dimen>
+    <dimen name="toolbar_tittle_size">20sp</dimen>
+    <dimen name="toolbar_tittle_margin_start">32sp</dimen>
+
+    <dimen name="image_hottelbox_width">200dp</dimen>
+    <dimen name="image_hottelbox_height">40dp</dimen>
+
+    <dimen name="icon_logo_size">24dp</dimen>
+
+    <dimen name="card_view_tittle_height">100dp</dimen>
+    <dimen name="card_view_background_height">180dp</dimen>
+    <dimen name="editext_tittle_notification">256dp</dimen>
+
+    <dimen name="hottel_information_background">200dp</dimen>
+    <dimen name="progress_bar_size">80dp</dimen>
+
+    <dimen name="icon_menu_size">56dp</dimen>
+
+    <dimen name="cardview_item_rv">120dp</dimen>
+
+    <dimen name="icon_delete_image_size">20dp</dimen>
+
+
+
+</resources>

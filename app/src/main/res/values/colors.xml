@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#027CDA</color>
+    <color name="colorPrimaryDark">#136EAF</color>
+    <color name="colorAccent">#027CDA</color>
+    <color name="colorStartGradientBlueStart">#027CDA</color>
+    <color name="colorStartGradientBlueEnd">#136EAF</color>
+
+    <color name="colorGray">#AAA3A3</color>
+
+    <color name="cardViewRed">#c4302b</color>
+    <color name="cardViewPink">#FF8E8E</color>
+    <color name="cardViewPurple">#6E55A5</color>
+    <color name="cardViewOrange">#F8B13B</color>
+    <color name="cardViewBlue">#260EFC</color>
+</resources>

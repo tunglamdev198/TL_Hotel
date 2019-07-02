@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.fragments.HotelInformationFragment">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tbHomePage"
+        android:fitsSystemWindows="true"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_size"
+        android:background="@color/colorPrimary">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/toolbar_tittle_margin_start"
+            android:text="@string/string_home_page_tittle"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_edittext" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4">
+
+        <ViewFlipper
+            android:id="@+id/sliderView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <TextView
+                android:id="@+id/txtHotelName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/txtLocation"
+                android:layout_marginStart="@dimen/margin_start"
+                android:layout_marginBottom="@dimen/margin_top"
+                android:text="Tuấn Vũ Hotel"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_edittext" />
+
+            <TextView
+                android:id="@+id/txtLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="@dimen/margin_start"
+                android:layout_marginBottom="@dimen/margin_top"
+                android:text="Cô Tô"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_edittext" />
+
+        </RelativeLayout>
+    </FrameLayout>
+
+    <GridLayout
+        android:padding="@dimen/margin_top"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        android:layout_weight="6"
+        android:alignmentMode="alignMargins"
+        android:columnCount="2"
+        android:columnOrderPreserved="false"
+        android:rowCount="2">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cvNotification"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_marginLeft="@dimen/margin_start"
+            android:layout_marginRight="@dimen/margin_end"
+            android:layout_marginBottom="@dimen/margin_start"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardCornerRadius="@dimen/margin_top"
+            app:cardElevation="@dimen/margin_top">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/icon_menu_size"
+                    android:layout_height="@dimen/icon_menu_size"
+                    android:src="@drawable/icon_notification" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_top"
+                    android:text="@string/hotel_notification"
+                    android:textSize="@dimen/text_size_edittext" />
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cvService"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_marginLeft="@dimen/margin_start"
+            android:layout_marginRight="@dimen/margin_end"
+            android:layout_marginBottom="@dimen/margin_start"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardCornerRadius="@dimen/margin_top"
+            app:cardElevation="@dimen/margin_top">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/icon_menu_size"
+                    android:layout_height="@dimen/icon_menu_size"
+                    android:src="@drawable/icon_service" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_top"
+                    android:text="@string/hotel_service"
+                    android:textSize="@dimen/text_size_edittext" />
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cvRoom"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_marginLeft="@dimen/margin_start"
+            android:layout_marginRight="@dimen/margin_end"
+            android:layout_marginBottom="@dimen/margin_start"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardCornerRadius="@dimen/margin_top"
+            app:cardElevation="@dimen/margin_top">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/icon_menu_size"
+                    android:layout_height="@dimen/icon_menu_size"
+                    android:src="@drawable/icon_room" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_top"
+                    android:text="@string/hotel_room_manager"
+                    android:textSize="@dimen/text_size_edittext" />
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cvAccount"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_marginLeft="@dimen/margin_start"
+            android:layout_marginRight="@dimen/margin_end"
+            android:layout_marginBottom="@dimen/margin_start"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardCornerRadius="@dimen/margin_top"
+            app:cardElevation="@dimen/margin_top">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/icon_menu_size"
+                    android:layout_height="@dimen/icon_menu_size"
+                    android:src="@drawable/icon_account" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_top"
+                    android:text="@string/hotel_account_management"
+                    android:textSize="@dimen/text_size_edittext" />
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+    </GridLayout>
+</LinearLayout>

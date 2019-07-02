@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group android:id="@+id/group_hotel">
+    <item
+        android:id="@+id/mnu_infomation"
+        android:icon="@drawable/ic_info"
+        android:title="@string/hotel_infomation"/>
+
+    <item
+        android:iconTint="@color/colorPrimary"
+        android:id="@+id/mnu_notifications"
+        android:icon="@drawable/ic_notifications"
+        android:title="@string/hotel_notification" />
+
+    <item
+        android:icon="@drawable/ic_service"
+        android:id="@+id/mnu_service"
+        android:title="@string/hotel_service" />
+
+        <item
+        android:icon="@drawable/ic_room"
+        android:id="@+id/mnu_rooms"
+        android:title="@string/hotel_room_manager" />
+
+        <item
+        android:icon="@drawable/ic_box"
+        android:id="@+id/mnu_box_management"
+        android:title="@string/hotel_box_management" />
+    </group>
+
+    <group android:id="@+id/group_app">
+        <item android:id="@+id/mnu_setting"
+            android:title="@string/hotel_setting" />
+
+        <item android:id="@+id/mnu_logout"
+            android:title="@string/hotel_logout" />
+    </group>
+</menu>

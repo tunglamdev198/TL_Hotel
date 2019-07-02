@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">TL_Hotel</string>
+    <string name="username_hint">Tên tài khoản</string>
+    <string name="password_hint">Mật khẩu</string>
+    <string name="login">Đăng nhập</string>
+
+    <string name="hotel_infomation">Thông tin khách sạn</string>
+    <string name="hotel_notification">Thông báo</string>
+    <string name="hotel_service">Dịch vụ</string>
+    <string name="hotel_room_manager">Quản lí phòng</string>
+    <string name="hotel_box_management">Quản lí Box</string>
+    <string name="hotel_account_management">Taì khoản</string>
+    <string name="hotel_setting">Cài đặt</string>
+    <string name="hotel_logout">Đăng xuất</string>
+
+    <string name="string_tittle">Tiêu đề</string>
+    <string name="string_photos">Hình ảnh</string>
+    <string name="string_home_page_tittle">Màn hình chính</string>
+
+
+    <string name="option_done">Xong</string>
+    <string name="option_cancel">Hủy</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:context=".ui.activities.LoginActivity">
+
+        <ImageView
+            android:layout_width="@dimen/image_hottelbox_width"
+            android:layout_height="@dimen/image_hottelbox_height"
+            android:layout_marginBottom="@dimen/margin_bottom_imageview"
+            android:src="@drawable/hotelbox_logo" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edittext_height"
+            android:layout_marginStart="@dimen/margin_start"
+            android:layout_marginTop="@dimen/margin_top"
+            android:layout_marginEnd="@dimen/margin_end"
+            android:background="@drawable/bg_edittext_login"
+            android:paddingLeft="@dimen/margin_start"
+            android:paddingEnd="@dimen/margin_top"
+            app:hintEnabled="false">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/edtUsername"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_edittext_login"
+                android:hint="@string/username_hint"
+                android:maxLines="1"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_size_edittext" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edittext_height"
+            android:layout_marginStart="@dimen/margin_start"
+            android:layout_marginTop="@dimen/margin_top"
+            android:layout_marginEnd="@dimen/margin_end"
+            android:background="@drawable/bg_edittext_login"
+            android:paddingLeft="@dimen/margin_start"
+            android:paddingEnd="@dimen/margin_top"
+            app:hintEnabled="false"
+            app:passwordToggleEnabled="true">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/edtPassword"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_edittext_login"
+                android:backgroundTint="@android:color/white"
+                android:hint="@string/password_hint"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_size_edittext" />
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_top"
+            android:background="@drawable/btn_gradient"
+            android:padding="@dimen/padding_button"
+            android:text="@string/login"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/button_size"
+            android:foreground="?attr/selectableItemBackground"/>
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:progressBackgroundTint="@android:color/white"
+        android:id="@+id/pbLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:visibility="gone"
+        android:layout_marginBottom="@dimen/progress_bar_size"
+         />
+
+
+</FrameLayout>

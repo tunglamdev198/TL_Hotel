@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.fragments.ServiceFragment">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tbNotification"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_size"
+        android:background="@color/colorPrimary"
+        android:fitsSystemWindows="true"
+        app:titleTextColor="@android:color/white">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:foreground="?attr/selectableItemBackground"
+            android:src="@drawable/ic_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/toolbar_tittle_margin_start"
+            android:text="@string/hotel_service"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_edittext" />
+
+    </android.support.v7.widget.Toolbar>
+</LinearLayout>
