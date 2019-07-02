@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.truonglam.tl_hotel.R;
+import com.truonglam.tl_hotel.common.Key;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,9 +17,15 @@ public class ServiceFragment extends Fragment {
 
 
     public ServiceFragment() {
-        // Required empty public constructor
     }
 
+    public static ServiceFragment newInstance() {
+
+        Bundle args = new Bundle();
+        ServiceFragment fragment = new ServiceFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

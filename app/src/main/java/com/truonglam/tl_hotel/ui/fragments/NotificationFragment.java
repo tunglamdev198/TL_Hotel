@@ -127,7 +127,9 @@ public class NotificationFragment extends Fragment implements View.OnClickListen
 
     private void closeFragment() {
         getActivity().getSupportFragmentManager()
-                .popBackStack();
+                .beginTransaction().replace(R.id.container,new HotelInformationFragment())
+                .setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right)
+                .commit();
     }
 
     private void configRecyclerView() {
@@ -177,10 +179,11 @@ public class NotificationFragment extends Fragment implements View.OnClickListen
 
     private void editTittle() {
         String tittle = txtTittle.getText().toString().trim();
-        Intent intent = new Intent(getActivity(), EditTittleActivity.class);
-        intent.putExtra(Key.KEY_TITTLE, tittle);
-        getActivity().startActivity(intent);
-        getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        EditTittleFragment editTittleFragment = EditTittleFragment.newInstance(tittle);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container,editTittleFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     @TargetApi(Build.VERSION_CODES.M)
