@@ -5,18 +5,26 @@ import android.os.Handler;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.truonglam.tl_hotel.R;
+import com.truonglam.tl_hotel.model.HotelInformation;
+import com.truonglam.tl_hotel.webservice.Client;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+
+    public static final String  TAG = "LoginActivity";
 
     @BindView(R.id.edtUsername)
     TextInputEditText edtUserName;
@@ -66,6 +74,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 return;
             }
         }
+        Client.getService().getHotelInfomaation(username,password)
+                .enqueue(new Callback<HotelInformation>() {
+                    @Override
+                    public void onResponse(Call<HotelInformation> call, Response<HotelInformation> response) {
+                        HotelInformation hotelInformation = response.body();
+                        Log.d(TAG, hotelInformation.toString());
+                    }
+
+                    @Override
+                    public void onFailure(Call<HotelInformation> call, Throwable t) {
+
+                    }
+                });
        pbLogin.setVisibility(View.VISIBLE);
        new Handler().postDelayed(new Runnable() {
            @Override
