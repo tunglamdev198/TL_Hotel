@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.truonglam.tl_hotel.R;
+import com.truonglam.tl_hotel.common.Key;
 import com.truonglam.tl_hotel.model.HotelInformation;
 import com.truonglam.tl_hotel.webservice.Client;
 
@@ -24,7 +25,7 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static final String  TAG = "LoginActivity";
+    public static final String TAG = "LoginActivity";
 
     @BindView(R.id.edtUsername)
     TextInputEditText edtUserName;
@@ -52,15 +53,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void validateLoginInformation() {
-        String username = edtUserName.getText().toString().trim();
-        String password = edtPassword.getText().toString().trim();
+        final String username = edtUserName.getText().toString().trim();
+        final String password = edtPassword.getText().toString().trim();
 
         if (username.isEmpty() && password.isEmpty()) {
             Toasty.error(this, "Vui lòng nhập đủ thông tin",
                     Toast.LENGTH_SHORT, true).show();
             return;
-        }
-        else {
+        } else {
             if (username.isEmpty()) {
                 Toasty.error(this, "Vui lòng nhập tên tài khoản",
                         Toast.LENGTH_SHORT, true)
@@ -74,28 +74,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 return;
             }
         }
-        Client.getService().getHotelInfomaation(username,password)
-                .enqueue(new Callback<HotelInformation>() {
-                    @Override
-                    public void onResponse(Call<HotelInformation> call, Response<HotelInformation> response) {
-                        HotelInformation hotelInformation = response.body();
-                        Log.d(TAG, hotelInformation.toString());
-                    }
 
-                    @Override
-                    public void onFailure(Call<HotelInformation> call, Throwable t) {
+        Client.getService().getInformation(username, password).enqueue(new Callback<HotelInformation>() {
+            @Override
+            public void onResponse(Call<HotelInformation> call, Response<HotelInformation> response) {
+                pbLogin.setVisibility(View.VISIBLE);
+                HotelInformation hotelInformation = response.body();
+                if(response.body()==null){
+                    Toast.makeText(LoginActivity.this,
+                            "Đăng nhập không thành công",Toast.LENGTH_SHORT).show();
+                    pbLogin.setVisibility(View.INVISIBLE);
+                    return;
+                }
+                Log.d(TAG, hotelInformation.toString());
+                Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+                intent.putExtra(Key.KEY_USER, username);
+                intent.putExtra(Key.KEY_PASSWORD, password);
+                startActivity(new Intent(LoginActivity.this, HomePageActivity.class));
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                finish();
+            }
 
-                    }
-                });
-       pbLogin.setVisibility(View.VISIBLE);
-       new Handler().postDelayed(new Runnable() {
-           @Override
-           public void run() {
-               startActivity(new Intent(LoginActivity.this,HomePageActivity.class));
-               overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
-               finish();
-           }
-       },2000);
+            @Override
+            public void onFailure(Call<HotelInformation> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override

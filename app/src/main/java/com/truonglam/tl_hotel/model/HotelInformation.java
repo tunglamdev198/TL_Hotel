@@ -2,9 +2,15 @@ package com.truonglam.tl_hotel.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class HotelInformation {
-    @SerializedName("id")
-    private String id;
+import java.io.Serializable;
+
+public class HotelInformation implements Serializable {
+    @SerializedName("access_token")
+    private String accessToken;
+
+    @SerializedName("hotel_id")
+    private String hotelId;
+
     @SerializedName("name")
     private String name;
 
@@ -15,22 +21,31 @@ public class HotelInformation {
     private String tittle;
 
     @SerializedName("type")
-    private boolean type;
+    private String type;
 
-    public HotelInformation(String id, String name, String logo, String tittle, boolean type) {
-        this.id = id;
+    public HotelInformation(String accessToken, String hotelId, String name, String logo, String tittle, String type) {
+        this.accessToken = accessToken;
+        this.hotelId = hotelId;
         this.name = name;
         this.logo = logo;
         this.tittle = tittle;
         this.type = type;
     }
 
-    public String getId() {
-        return id;
+    public String getAccessToken() {
+        return accessToken;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public String getHotelId() {
+        return hotelId;
+    }
+
+    public void setHotelId(String hotelId) {
+        this.hotelId = hotelId;
     }
 
     public String getName() {
@@ -57,22 +72,23 @@ public class HotelInformation {
         this.tittle = tittle;
     }
 
-    public boolean isType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(boolean type) {
+    public void setType(String type) {
         this.type = type;
     }
 
     @Override
     public String toString() {
         return "HotelInformation{" +
-                "id='" + id + '\'' +
+                "accessToken='" + accessToken + '\'' +
+                ", hotelId='" + hotelId + '\'' +
                 ", name='" + name + '\'' +
                 ", logo='" + logo + '\'' +
                 ", tittle='" + tittle + '\'' +
-                ", type=" + type +
+                ", type='" + type + '\'' +
                 '}' + "\n";
     }
 }

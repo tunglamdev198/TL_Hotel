@@ -6,18 +6,23 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.truonglam.tl_hotel.R;
+import com.truonglam.tl_hotel.common.Key;
+import com.truonglam.tl_hotel.model.HotelInformation;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class HotelInformationFragment extends Fragment implements View.OnClickListener {
+    public static final String TAG = "HotelInformationFragment";
 
     @BindView(R.id.sliderView)
     ViewFlipper sliderView;
@@ -34,10 +39,25 @@ public class HotelInformationFragment extends Fragment implements View.OnClickLi
     @BindView(R.id.cvAccount)
     CardView cvAccount;
 
+    @BindView(R.id.txtHotelName)
+    TextView txtHotelName;
+
+    @BindView(R.id.txtLocation)
+    TextView txtLocation;
+
     private int[] images = {R.drawable.hotel1, R.drawable.hotel2, R.drawable.hotel3};
 
 
     public HotelInformationFragment() {
+    }
+
+    public static HotelInformationFragment newInstance(HotelInformation hotelInformation) {
+
+        Bundle args = new Bundle();
+        args.putSerializable(Key.KEY_HOTEL_INFORMATION, hotelInformation);
+        HotelInformationFragment fragment = new HotelInformationFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -54,7 +74,16 @@ public class HotelInformationFragment extends Fragment implements View.OnClickLi
         for (int image : images) {
             slideImages(image);
         }
+        initViews();
         registerListener();
+    }
+
+    private void initViews() {
+        HotelInformation hotelInformation =
+                (HotelInformation) getArguments().getSerializable(Key.KEY_HOTEL_INFORMATION);
+//        Log.d(TAG, hotelInformation.toString());
+        txtHotelName.setText(hotelInformation.getName());
+        txtLocation.setText(hotelInformation.getTittle());
     }
 
     private void registerListener() {
@@ -80,7 +109,7 @@ public class HotelInformationFragment extends Fragment implements View.OnClickLi
         if (fragment != null) {
             getActivity().getSupportFragmentManager()
                     .beginTransaction()
-                    .setCustomAnimations(android.R.anim.fade_in,android.R.anim.fade_out)
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                     .replace(R.id.container, fragment)
                     .addToBackStack(null)
                     .commit();
@@ -103,7 +132,7 @@ public class HotelInformationFragment extends Fragment implements View.OnClickLi
                 loadFragment(new AccountFragment());
                 break;
 
-                case R.id.cvRoom:
+            case R.id.cvRoom:
                 loadFragment(new RoomsFragment());
                 break;
 
