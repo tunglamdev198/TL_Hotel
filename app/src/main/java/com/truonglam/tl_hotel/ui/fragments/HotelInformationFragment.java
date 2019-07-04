@@ -6,14 +6,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ViewFlipper;
 
+import com.squareup.picasso.Picasso;
 import com.truonglam.tl_hotel.R;
 import com.truonglam.tl_hotel.common.Key;
 import com.truonglam.tl_hotel.model.HotelInformation;
@@ -24,8 +23,11 @@ import butterknife.ButterKnife;
 public class HotelInformationFragment extends Fragment implements View.OnClickListener {
     public static final String TAG = "HotelInformationFragment";
 
-    @BindView(R.id.sliderView)
-    ViewFlipper sliderView;
+//    @BindView(R.id.sliderView)
+//    ViewFlipper sliderView;
+
+    @BindView(R.id.imgLogo)
+    ImageView imgLogo;
 
     @BindView(R.id.cvNotification)
     CardView cvNotification;
@@ -46,19 +48,20 @@ public class HotelInformationFragment extends Fragment implements View.OnClickLi
     TextView txtLocation;
 
     private int[] images = {R.drawable.hotel1, R.drawable.hotel2, R.drawable.hotel3};
+    private HotelInformation hotelInformation;
 
 
     public HotelInformationFragment() {
     }
 
     public static HotelInformationFragment newInstance(HotelInformation hotelInformation) {
-
         Bundle args = new Bundle();
         args.putSerializable(Key.KEY_HOTEL_INFORMATION, hotelInformation);
         HotelInformationFragment fragment = new HotelInformationFragment();
         fragment.setArguments(args);
         return fragment;
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,19 +74,19 @@ public class HotelInformationFragment extends Fragment implements View.OnClickLi
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        for (int image : images) {
-            slideImages(image);
-        }
+//        for (int image : images) {
+//            slideImages(image);
+//        }
         initViews();
         registerListener();
     }
 
     private void initViews() {
-        HotelInformation hotelInformation =
+        hotelInformation =
                 (HotelInformation) getArguments().getSerializable(Key.KEY_HOTEL_INFORMATION);
-//        Log.d(TAG, hotelInformation.toString());
         txtHotelName.setText(hotelInformation.getName());
         txtLocation.setText(hotelInformation.getTittle());
+        Picasso.with(getActivity()).load(hotelInformation.getLogo()).into(imgLogo);
     }
 
     private void registerListener() {
@@ -93,17 +96,17 @@ public class HotelInformationFragment extends Fragment implements View.OnClickLi
         cvAccount.setOnClickListener(this);
     }
 
-    private void slideImages(int image) {
-        ImageView imageView = new ImageView(getContext());
-        imageView.setImageResource(image);
-        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-        sliderView.addView(imageView);
-        sliderView.setFlipInterval(4000);
-        sliderView.setAutoStart(true);
-        sliderView.setOutAnimation(getActivity(), android.R.anim.slide_out_right);
-        sliderView.setInAnimation(getActivity(), android.R.anim.slide_in_left);
-    }
+//    private void slideImages(int image) {
+//        ImageView imageView = new ImageView(getContext());
+//        imageView.setImageResource(image);
+//        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//
+//        sliderView.addView(imageView);
+//        sliderView.setFlipInterval(4000);
+//        sliderView.setAutoStart(true);
+//        sliderView.setOutAnimation(getActivity(), android.R.anim.slide_out_right);
+//        sliderView.setInAnimation(getActivity(), android.R.anim.slide_in_left);
+//    }
 
     private void loadFragment(Fragment fragment) {
         if (fragment != null) {
@@ -120,7 +123,8 @@ public class HotelInformationFragment extends Fragment implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.cvNotification:
-                loadFragment(new NotificationFragment());
+                NotificationFragment notificationFragment = NotificationFragment.newInstance("Hello", hotelInformation);
+                loadFragment(notificationFragment);
                 break;
 
             case R.id.cvService:
@@ -138,14 +142,6 @@ public class HotelInformationFragment extends Fragment implements View.OnClickLi
 
             default:
                 break;
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        for (int image : images) {
-            slideImages(image);
         }
     }
 }

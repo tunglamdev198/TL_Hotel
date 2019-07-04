@@ -36,6 +36,8 @@
 
     <dimen name="icon_delete_image_size">20dp</dimen>
 
+    <dimen name="edit_text_input_height">56dp</dimen>
+
 
 
 </resources>

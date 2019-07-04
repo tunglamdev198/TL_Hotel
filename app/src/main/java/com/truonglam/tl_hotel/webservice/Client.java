@@ -16,7 +16,7 @@ public class Client {
 
     private Client(){
         service = new Retrofit.Builder()
-                .baseUrl("https://a9e9e3da.ngrok.io")
+                .baseUrl("http://84a43039.ngrok.io")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(IService.class);

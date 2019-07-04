@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 
 import com.truonglam.tl_hotel.R;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -25,6 +28,7 @@ public class AccountFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_account, container, false);
+
     }
 
 }

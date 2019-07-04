@@ -3,22 +3,19 @@ package com.truonglam.tl_hotel.ui.fragments;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.service.quicksettings.Tile;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -31,7 +28,7 @@ import android.widget.Toast;
 import com.truonglam.tl_hotel.R;
 import com.truonglam.tl_hotel.adapter.ImageListAdapter;
 import com.truonglam.tl_hotel.common.Key;
-import com.truonglam.tl_hotel.ui.activities.EditTittleActivity;
+import com.truonglam.tl_hotel.model.HotelInformation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +73,8 @@ public class NotificationFragment extends Fragment implements View.OnClickListen
 
     private int index;
 
+    public static final String TAG = "NotificationFragment";
+
     public NotificationFragment() {
         images = new ArrayList<>();
         images.add(R.drawable.hotel1);
@@ -85,10 +84,11 @@ public class NotificationFragment extends Fragment implements View.OnClickListen
 
     }
 
-    public static NotificationFragment newInstance(String title) {
+    public static NotificationFragment newInstance(String title, HotelInformation hotelInformation) {
         NotificationFragment fragment = new NotificationFragment();
         Bundle args = new Bundle();
         args.putString(Key.KEY_TITTLE, title);
+        args.putSerializable(Key.KEY_HOTEL_INFORMATION,hotelInformation);
         fragment.setArguments(args);
         return fragment;
     }
@@ -126,9 +126,10 @@ public class NotificationFragment extends Fragment implements View.OnClickListen
     }
 
     private void closeFragment() {
-        getActivity().getSupportFragmentManager()
-                .beginTransaction().replace(R.id.container,new HotelInformationFragment())
-                .setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right)
+        HotelInformation hotelInformation = (HotelInformation) getArguments().getSerializable(Key.KEY_HOTEL_INFORMATION);
+        HotelInformationFragment fragment = HotelInformationFragment.newInstance(hotelInformation);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container,fragment)
                 .commit();
     }
 
@@ -181,7 +182,7 @@ public class NotificationFragment extends Fragment implements View.OnClickListen
         String tittle = txtTittle.getText().toString().trim();
         EditTittleFragment editTittleFragment = EditTittleFragment.newInstance(tittle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container,editTittleFragment)
+                .replace(R.id.container, editTittleFragment)
                 .addToBackStack(null)
                 .commit();
     }

@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,10 +78,11 @@ public class EditTittleFragment extends DialogFragment   implements View.OnClick
 
             return;
         }
-        NotificationFragment notificationFragment = NotificationFragment.newInstance(tittle);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container,notificationFragment)
-                .commit();
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        FragmentTransaction trans = manager.beginTransaction();
+        trans.remove(this);
+        trans.commit();
+        manager.popBackStack();
     }
 
     @Override

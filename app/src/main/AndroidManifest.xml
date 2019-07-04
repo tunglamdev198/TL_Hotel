@@ -22,12 +22,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.activities.EditTittleActivity"
-            android:label="Chỉnh sửa"
-            android:theme="@style/Theme.AppCompat.DayNight.Dialog.Alert" ></activity>
         <activity android:name=".ui.activities.SplashActivity" />
-        <activity android:name=".ui.activities.HomePageActivity" />
-        <activity android:name=".ui.activities.LoginActivity">
+        <activity android:name=".ui.activities.HomePageActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
