@@ -2,6 +2,7 @@ package com.truonglam.tl_hotel.ui.fragments;
 
 
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,17 +10,22 @@ import android.view.ViewGroup;
 
 import com.truonglam.tl_hotel.R;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class AccountFragment extends Fragment {
+
+    @BindView(R.id.edtOldPassword)
+    TextInputEditText edtOldPassword;
+
+    @BindView(R.id.edtNewPassword)
+    TextInputEditText edtNewPassword;
+
+    @BindView(R.id.edtConfirmPassword)
+    TextInputEditText edtConfirmPassword;
 
 
     public AccountFragment() {
-        // Required empty public constructor
     }
 
 
@@ -27,8 +33,9 @@ public class AccountFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_account, container, false);
-
+        View view = inflater.inflate(R.layout.fragment_account, container, false);
+        ButterKnife.bind(this, view);
+        return view;
     }
 
 }

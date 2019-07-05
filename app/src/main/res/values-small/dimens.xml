@@ -33,5 +33,10 @@
 
     <dimen name="cardview_item_rv">15dp</dimen>
 
+    <dimen name="edit_text_input_height">42dp</dimen>
+    <dimen name="vertical_card_view_height">52.5dp</dimen>
+
+    <dimen name="text_size_item_service">18sp</dimen>
+
 
 </resources>

@@ -36,6 +36,10 @@
     <dimen name="cardview_item_rv">240dp</dimen>
 
     <dimen name="icon_delete_image_size">40dp</dimen>
+    <dimen name="edit_text_input_height">112dp</dimen>
+    <dimen name="vertical_card_view_height">140dp</dimen>
+
+    <dimen name="text_size_item_service">48sp</dimen>
 
 
 </resources>

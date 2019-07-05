@@ -37,4 +37,9 @@
 
     <dimen name="icon_delete_image_size">30dp</dimen>
 
+    <dimen name="edit_text_input_height">84dp</dimen>
+    <dimen name="vertical_card_view_height">105dp</dimen>
+
+    <dimen name="text_size_item_service">36sp</dimen>
+
 </resources>

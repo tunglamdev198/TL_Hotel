@@ -7,7 +7,7 @@
 
     <ImageView
         android:src="@drawable/img_demo"
-        android:scaleType="centerCrop"
+       android:scaleType="centerCrop"
         android:id="@+id/hotel_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

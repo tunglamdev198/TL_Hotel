@@ -128,7 +128,8 @@ public class HotelInformationFragment extends Fragment implements View.OnClickLi
                 break;
 
             case R.id.cvService:
-                loadFragment(new ServiceFragment());
+                ServiceFragment serviceFragment = ServiceFragment.newInstance(hotelInformation);
+                loadFragment(serviceFragment);
                 break;
 
 

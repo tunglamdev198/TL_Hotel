@@ -102,34 +102,34 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private void doLogin() {
         loadProgressBar();
-        hotelInfoViewModel = ViewModelProvider.AndroidViewModelFactory
-                .getInstance(getActivity().getApplication())
-                .create(HotelInformationViewModel.class);
-        hotelInfoViewModel.getHotelInformation(username,password).observe(getActivity(), new Observer<HotelInformation>() {
-            @Override
-            public void onChanged(@Nullable HotelInformation hotelInformation) {
-                HotelInformationFragment fragment = HotelInformationFragment.newInstance(hotelInformation);
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, fragment)
-                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-                        .commit();
-            }
-        });
-//        Client.getService().getInformation(username, password).enqueue(new Callback<HotelInformation>() {
+//        hotelInfoViewModel = ViewModelProvider.AndroidViewModelFactory
+//                .getInstance(getActivity().getApplication())
+//                .create(HotelInformationViewModel.class);
+//        hotelInfoViewModel.getHotelInformation(username,password).observe(getActivity(), new Observer<HotelInformation>() {
 //            @Override
-//            public void onResponse(Call<HotelInformation> call, Response<HotelInformation> response) {
-//                HotelInformation hotelInformation = response.body();
+//            public void onChanged(@Nullable HotelInformation hotelInformation) {
 //                HotelInformationFragment fragment = HotelInformationFragment.newInstance(hotelInformation);
 //                getActivity().getSupportFragmentManager().beginTransaction()
 //                        .replace(R.id.container, fragment)
 //                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
 //                        .commit();
 //            }
-//
-//            @Override
-//            public void onFailure(Call<HotelInformation> call, Throwable t) {
-//            }
 //        });
+        Client.getService().getInformation(username, password).enqueue(new Callback<HotelInformation>() {
+            @Override
+            public void onResponse(Call<HotelInformation> call, Response<HotelInformation> response) {
+                HotelInformation hotelInformation = response.body();
+                HotelInformationFragment fragment = HotelInformationFragment.newInstance(hotelInformation);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, fragment)
+                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                        .commit();
+            }
+
+            @Override
+            public void onFailure(Call<HotelInformation> call, Throwable t) {
+            }
+        });
     }
 
     private void loadProgressBar() {

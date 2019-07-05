@@ -30,11 +30,12 @@
         android:layout_weight="4">
 
         <!--<ViewFlipper-->
-        <!--android:id="@+id/sliderView"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent" />-->
+            <!--android:id="@+id/sliderView"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent" />-->
 
         <ImageView
+            android:scaleType="centerCrop"
             android:id="@+id/imgLogo"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
