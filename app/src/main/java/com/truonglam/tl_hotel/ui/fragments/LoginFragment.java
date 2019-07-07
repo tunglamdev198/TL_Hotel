@@ -1,14 +1,10 @@
 package com.truonglam.tl_hotel.ui.fragments;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +18,6 @@ import com.truonglam.tl_hotel.handler.MyHandler;
 import com.truonglam.tl_hotel.model.HotelInformation;
 import com.truonglam.tl_hotel.viewmodel.HotelInformationViewModel;
 import com.truonglam.tl_hotel.webservice.Client;
-
-import java.util.ArrayList;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -120,6 +113,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             public void onResponse(Call<HotelInformation> call, Response<HotelInformation> response) {
                 HotelInformation hotelInformation = response.body();
                 HotelInformationFragment fragment = HotelInformationFragment.newInstance(hotelInformation);
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getActivity(), "Tài khoản hoặc mật khẩu không đúng",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.container, fragment)
                         .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)

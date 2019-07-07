@@ -134,7 +134,8 @@ public class HotelInformationFragment extends Fragment implements View.OnClickLi
 
 
             case R.id.cvAccount:
-                loadFragment(new AccountFragment());
+                AccountFragment accountFragment = AccountFragment.newInstance(hotelInformation);
+                loadFragment(accountFragment);
                 break;
 
             case R.id.cvRoom:
