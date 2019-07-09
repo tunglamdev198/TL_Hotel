@@ -54,9 +54,10 @@ public class HotelInformationFragment extends Fragment implements View.OnClickLi
     public HotelInformationFragment() {
     }
 
-    public static HotelInformationFragment newInstance(HotelInformation hotelInformation) {
+    public static HotelInformationFragment newInstance(HotelInformation hotelInformation,String username) {
         Bundle args = new Bundle();
         args.putSerializable(Key.KEY_HOTEL_INFORMATION, hotelInformation);
+        args.putString(Key.KEY_USER,username);
         HotelInformationFragment fragment = new HotelInformationFragment();
         fragment.setArguments(args);
         return fragment;
@@ -134,12 +135,14 @@ public class HotelInformationFragment extends Fragment implements View.OnClickLi
 
 
             case R.id.cvAccount:
-                AccountFragment accountFragment = AccountFragment.newInstance(hotelInformation);
+                String username = getArguments().getString(Key.KEY_USER);
+                AccountFragment accountFragment = AccountFragment.newInstance(hotelInformation,username);
                 loadFragment(accountFragment);
                 break;
 
             case R.id.cvRoom:
-                loadFragment(new RoomsFragment());
+                RoomsFragment roomsFragment = RoomsFragment.newInstance(hotelInformation);
+                loadFragment(roomsFragment);
                 break;
 
             default:

@@ -5,7 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/vertical_card_view_height"
     android:layout_marginTop="@dimen/margin_top"
-    app:cardCornerRadius="@dimen/cardview_default_radius">
+    android:layout_marginStart="@dimen/margin_top"
+    android:layout_marginEnd="@dimen/margin_top"
+    app:cardCornerRadius="@dimen/margin_top"
+    android:foreground="?attr/selectableItemBackground">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"

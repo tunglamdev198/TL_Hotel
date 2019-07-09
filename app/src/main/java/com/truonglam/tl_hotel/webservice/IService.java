@@ -2,6 +2,7 @@ package com.truonglam.tl_hotel.webservice;
 
 import com.truonglam.tl_hotel.model.HotelInformation;
 import com.truonglam.tl_hotel.model.HotelServiceResponse;
+import com.truonglam.tl_hotel.model.RoomClusterResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -18,6 +19,11 @@ public interface IService {
     @GET("/api/user/getService")
     Call<HotelServiceResponse> getServices(@Header("token") String token,
                                            @Query("id") String hotelId);
+
+    @GET("/api/hotel/cumphong")
+    Call<RoomClusterResponse> getClusterRooms(@Header("token") String token,
+                                              @Query("id") String id);
+
 
     @POST("/api/user/changePassword")
     Call<HotelInformation> changePassword(@Header("token") String token,

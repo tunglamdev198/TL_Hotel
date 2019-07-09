@@ -127,7 +127,7 @@ public class NotificationFragment extends Fragment implements View.OnClickListen
 
     private void closeFragment() {
         HotelInformation hotelInformation = (HotelInformation) getArguments().getSerializable(Key.KEY_HOTEL_INFORMATION);
-        HotelInformationFragment fragment = HotelInformationFragment.newInstance(hotelInformation);
+        HotelInformationFragment fragment = HotelInformationFragment.newInstance(hotelInformation,"anh");
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container,fragment)
                 .commit();

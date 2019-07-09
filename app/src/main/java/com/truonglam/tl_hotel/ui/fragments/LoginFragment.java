@@ -1,5 +1,7 @@
 package com.truonglam.tl_hotel.ui.fragments;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -95,39 +97,45 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private void doLogin() {
         loadProgressBar();
-//        hotelInfoViewModel = ViewModelProvider.AndroidViewModelFactory
-//                .getInstance(getActivity().getApplication())
-//                .create(HotelInformationViewModel.class);
-//        hotelInfoViewModel.getHotelInformation(username,password).observe(getActivity(), new Observer<HotelInformation>() {
-//            @Override
-//            public void onChanged(@Nullable HotelInformation hotelInformation) {
-//                HotelInformationFragment fragment = HotelInformationFragment.newInstance(hotelInformation);
-//                getActivity().getSupportFragmentManager().beginTransaction()
-//                        .replace(R.id.container, fragment)
-//                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-//                        .commit();
-//            }
-//        });
-        Client.getService().getInformation(username, password).enqueue(new Callback<HotelInformation>() {
+        hotelInfoViewModel = ViewModelProvider.AndroidViewModelFactory
+                .getInstance(getActivity().getApplication())
+                .create(HotelInformationViewModel.class);
+        hotelInfoViewModel.getHotelInformation(username,password).observe(getActivity(), new Observer<HotelInformation>() {
             @Override
-            public void onResponse(Call<HotelInformation> call, Response<HotelInformation> response) {
-                HotelInformation hotelInformation = response.body();
-                HotelInformationFragment fragment = HotelInformationFragment.newInstance(hotelInformation);
-                if (!response.isSuccessful()) {
+            public void onChanged(@Nullable HotelInformation hotelInformation) {
+                if(hotelInformation == null){
                     Toast.makeText(getActivity(), "Tài khoản hoặc mật khẩu không đúng",
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+                HotelInformationFragment fragment = HotelInformationFragment.newInstance(hotelInformation,username);
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.container, fragment)
                         .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                         .commit();
             }
-
-            @Override
-            public void onFailure(Call<HotelInformation> call, Throwable t) {
-            }
         });
+//        Client.getService().getInformation(username, password).enqueue(new Callback<HotelInformation>() {
+//            @Override
+//            public void onResponse(Call<HotelInformation> call, Response<HotelInformation> response) {
+//                HotelInformation hotelInformation = response.body();
+//                HotelInformationFragment fragment = HotelInformationFragment.newInstance(hotelInformation);
+//                if (!response.isSuccessful()) {
+//                    Toast.makeText(getActivity(), "Tài khoản hoặc mật khẩu không đúng",
+//                            Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                getActivity().getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.container, fragment)
+//                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+//                        .commit();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<HotelInformation> call, Throwable t) {
+//            }
+//        });
     }
 
     private void loadProgressBar() {
@@ -140,6 +148,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
         new MyHandler(runnable, Time.SERVER_TIME_OUT).start();
     }
+
 
     @Override
     public void onClick(View v) {

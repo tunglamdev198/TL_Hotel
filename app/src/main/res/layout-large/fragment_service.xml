@@ -39,7 +39,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvListService"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:scrollbars="vertical"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager">
 
@@ -54,4 +54,14 @@
         android:layout_marginBottom="@dimen/progress_bar_size"
         android:progressBackgroundTint="@android:color/white"
         android:visibility="gone" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabAddService"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/margin_end"
+        android:layout_marginBottom="@dimen/margin_top"
+        android:src="@drawable/ic_add"
+        android:backgroundTint="@color/cardViewRed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </FrameLayout>
