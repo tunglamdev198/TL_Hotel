@@ -39,7 +39,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NotificationFragment extends Fragment implements View.OnClickListener {
+public class NotificationFragment extends Fragment implements View.OnClickListener{
 
     private static final int REQUEST_CODE_EDIT_TITTLE = 1;
     private static final int REQUEST_CODE_PERMISSIONS = 10;
@@ -180,11 +180,14 @@ public class NotificationFragment extends Fragment implements View.OnClickListen
 
     private void editTittle() {
         String tittle = txtTittle.getText().toString().trim();
-        EditTittleFragment editTittleFragment = EditTittleFragment.newInstance(tittle);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, editTittleFragment)
-                .addToBackStack(null)
-                .commit();
+        EditTittleFragment editTittleFragment = EditTittleFragment.newInstance(tittle,"Chỉnh sửa");
+        editTittleFragment.show(getFragmentManager(),"EditTittleFragment");
+        editTittleFragment.setTittleDialogListener(new EditTittleFragment.TittleDialogListener() {
+            @Override
+            public void applyText(String tittle) {
+                txtTittle.setText(tittle);
+            }
+        });
     }
 
     @TargetApi(Build.VERSION_CODES.M)

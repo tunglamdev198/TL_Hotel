@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.truonglam.tl_hotel.R;
@@ -42,6 +43,9 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
     @BindView(R.id.btnDone)
     Button btnDone;
+
+    @BindView(R.id.btnBack)
+    ImageView btnBack;
 
     private HotelInformation hotelInformation;
 
@@ -81,6 +85,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
     private void registerListener(){
         btnDone.setOnClickListener(this);
+        btnBack.setOnClickListener(this);
     }
 
     private void vadidatePassword() {
@@ -107,22 +112,22 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         String password = edtOldPassword.getText().toString().trim();
         String newPassword = edtNewPassword.getText().toString().trim();
         String username = getArguments().getString(Key.KEY_USER);
-        Client.getService().changePassword(token,username,password,newPassword).enqueue(new Callback<HotelInformation>() {
-            @Override
-            public void onResponse(Call<HotelInformation> call, Response<HotelInformation> response) {
-                HotelInformation hotelInformation = response.body();
-                Log.d(TAG, hotelInformation.toString());
-                HotelInformationViewModel mViewModel = ViewModelProvider.AndroidViewModelFactory
-                        .getInstance(getActivity().getApplication())
-                        .create(HotelInformationViewModel.class);
-                mViewModel.setHotelInformation(hotelInformation);
-            }
-
-            @Override
-            public void onFailure(Call<HotelInformation> call, Throwable t) {
-
-            }
-        });
+//        Client.getService().changePassword(token,username,password,newPassword).enqueue(new Callback<HotelInformation>() {
+//            @Override
+//            public void onResponse(Call<HotelInformation> call, Response<HotelInformation> response) {
+//                HotelInformation hotelInformation = response.body();
+//                Log.d(TAG, hotelInformation.toString());
+//                HotelInformationViewModel mViewModel = ViewModelProvider.AndroidViewModelFactory
+//                        .getInstance(getActivity().getApplication())
+//                        .create(HotelInformationViewModel.class);
+//                mViewModel.setHotelInformation(hotelInformation);
+//            }
+//
+//            @Override
+//            public void onFailure(Call<HotelInformation> call, Throwable t) {
+//
+//            }
+//        });
     }
 
     @Override
@@ -130,6 +135,9 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.btnDone:
                 changePassword();
+                break;
+            case R.id.btnBack:
+                getActivity().getSupportFragmentManager().popBackStack();
                 break;
 
             default:

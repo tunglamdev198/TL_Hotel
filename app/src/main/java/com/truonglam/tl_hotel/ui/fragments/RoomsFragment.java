@@ -1,12 +1,14 @@
 package com.truonglam.tl_hotel.ui.fragments;
 
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -42,7 +44,7 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RoomsFragment extends Fragment implements View.OnClickListener {
+public class RoomsFragment extends Fragment implements View.OnClickListener, AddEditRoomClusterFragment.ClusterRoomDialogListener {
 
     public static final String TAG = "RoomsFragment";
 
@@ -55,9 +57,14 @@ public class RoomsFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.spinkit_loading)
     ProgressBar spinkitLoading;
 
+    @BindView(R.id.btn_add)
+    FloatingActionButton btnAdd;
+
     private ClusterRoomAdapter adapter;
 
     private ServicesViewModel mViewModel;
+
+    private HotelInformation hotelInformation;
 
     public RoomsFragment() {
     }
@@ -84,37 +91,50 @@ public class RoomsFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         configRecyclerView();
         registerListener();
-        mViewModel = ViewModelProvider.AndroidViewModelFactory
-                .getInstance(getActivity().getApplication())
-                .create(ServicesViewModel.class);
-        mViewModel.getHotelServices().observe(getActivity(), new Observer<List<HotelService>>() {
-            @Override
-            public void onChanged(@Nullable List<HotelService> services) {
-                Log.d(TAG, services.toString());
-            }
-        });
+//        mViewModel = ViewModelProvider.AndroidViewModelFactory
+//                .getInstance(getActivity().getApplication())
+//                .create(ServicesViewModel.class);
+//        mViewModel.getHotelServices().observe(getActivity(), new Observer<List<HotelService>>() {
+//            @Override
+//            public void onChanged(@Nullable List<HotelService> services) {
+//                Log.d(TAG, services.toString());
+//            }
+//        });
     }
 
-    private void registerListener(){
+    private void registerListener() {
         btnBack.setOnClickListener(this);
+        btnAdd.setOnClickListener(this);
     }
+
 
     private void configRecyclerView() {
-        HotelInformation hotelInformation =
+        spinkitLoading.setVisibility(View.VISIBLE);
+        hotelInformation =
                 (HotelInformation) getArguments().getSerializable(Key.KEY_HOTEL_INFORMATION);
 
-        String token = hotelInformation.getAccessToken();
+        final String token = hotelInformation.getAccessToken();
 
         Client.getService().getClusterRooms(token, hotelInformation.getHotelId()).enqueue(new Callback<RoomClusterResponse>() {
+
+            @SuppressLint("RestrictedApi")
             @Override
             public void onResponse(Call<RoomClusterResponse> call, Response<RoomClusterResponse> response) {
-                List<RoomCluster> roomClusters = response.body().getRoomClusters();
+                final List<RoomCluster> roomClusters = response.body().getRoomClusters();
                 adapter = new ClusterRoomAdapter(roomClusters, getActivity());
                 rvRoomCluster.setAdapter(adapter);
+                spinkitLoading.setVisibility(View.GONE);
+                btnAdd.setVisibility(View.VISIBLE);
                 adapter.setOnItemClickListener(new HotelServiceAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClicked(int position, View view) {
-                        Toast.makeText(getActivity(), "Clicked", Toast.LENGTH_SHORT).show();
+                        RoomCluster roomCluster = roomClusters.get(position);
+                        ListRoomFragment listRoomFragment = ListRoomFragment.newInstance(roomCluster, token, hotelInformation);
+                        getActivity().getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.container, listRoomFragment)
+                                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                                .addToBackStack(null)
+                                .commit();
                     }
                 });
             }
@@ -126,7 +146,7 @@ public class RoomsFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-    private void loadProgressBar(){
+    private void loadProgressBar() {
         spinkitLoading.setVisibility(View.VISIBLE);
         Sprite doubleBounce = new DoubleBounce();
         spinkitLoading.setIndeterminateDrawable(doubleBounce);
@@ -135,19 +155,65 @@ public class RoomsFragment extends Fragment implements View.OnClickListener {
             public void run() {
 
             }
-        },1500);
+        }, 1500);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnBack:
-                loadProgressBar();
                 getActivity().getSupportFragmentManager().popBackStack();
+                break;
+
+            case R.id.btn_add:
+                AddEditRoomClusterFragment fragment = AddEditRoomClusterFragment
+                        .newInstance(Key.MODE_ADD_CLUSTER_ROOM, "");
+
+                fragment.show(getFragmentManager(), "AddEditClusterRoomFragment");
+                fragment.setListener(this);
                 break;
 
             default:
                 break;
         }
+    }
+
+    private void addClusterRoom(String clusterName) {
+        RoomCluster roomCluster = new RoomCluster(hotelInformation.getHotelId(),clusterName , "1");
+        Client.getService().createRoomCluster(hotelInformation.getAccessToken(), roomCluster).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void resetData(){
+
+    }
+
+    @Override
+    public void applyText(String clusterName, String mode) {
+        switch (mode) {
+            case Key.MODE_ADD_CLUSTER_ROOM:
+                addClusterRoom(clusterName);
+                break;
+
+            case Key.MODE_EDIT_CLUSTER_ROOM:
+                break;
+
+
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }
 }

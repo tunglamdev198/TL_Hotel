@@ -54,7 +54,7 @@
                 android:layout_marginBottom="@dimen/margin_top"
                 android:text="Tuấn Vũ Hotel"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/holo_orange_dark"
                 android:textSize="@dimen/text_size_edittext" />
 
             <TextView
@@ -65,7 +65,7 @@
                 android:layout_marginStart="@dimen/margin_start"
                 android:layout_marginBottom="@dimen/margin_top"
                 android:text="Cô Tô"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/holo_orange_dark"
                 android:textSize="@dimen/text_size_edittext" />
 
         </RelativeLayout>

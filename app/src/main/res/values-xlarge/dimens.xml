@@ -41,5 +41,7 @@
 
     <dimen name="text_size_item_service">48sp</dimen>
 
+    <dimen name="dialog_fragment_height">400dp</dimen>
+
 
 </resources>

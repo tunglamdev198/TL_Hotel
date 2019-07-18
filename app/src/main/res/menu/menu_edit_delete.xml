@@ -7,4 +7,8 @@
         android:id="@+id/mnu_delete"
         android:title="Xóa" />
 
+    <item
+        android:id="@+id/mnu_edit"
+        android:title="Sửa" />
+
 </menu>

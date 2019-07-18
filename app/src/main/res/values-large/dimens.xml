@@ -42,4 +42,6 @@
 
     <dimen name="text_size_item_service">36sp</dimen>
 
+    <dimen name="dialog_fragment_height">300dp</dimen>
+
 </resources>

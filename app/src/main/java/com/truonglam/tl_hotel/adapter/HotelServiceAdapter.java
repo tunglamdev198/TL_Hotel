@@ -1,12 +1,14 @@
 package com.truonglam.tl_hotel.adapter;
 
 import android.content.Context;
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.truonglam.tl_hotel.R;
@@ -38,9 +40,15 @@ public class HotelServiceAdapter extends RecyclerView.Adapter<HotelServiceAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         HotelService hotelService = services.get(position);
         holder.txtServiceName.setText(hotelService.getTittle());
+        holder.imgShowOption.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClickListener.onItemClicked(holder.getAdapterPosition(),v);
+            }
+        });
     }
 
     @Override
@@ -60,6 +68,9 @@ public class HotelServiceAdapter extends RecyclerView.Adapter<HotelServiceAdapte
 
         @BindView(R.id.txtServiceName)
         TextView txtServiceName;
+
+        @BindView(R.id.img_show_optoion)
+        ImageView imgShowOption;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

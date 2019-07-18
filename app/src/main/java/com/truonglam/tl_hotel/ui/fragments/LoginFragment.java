@@ -19,14 +19,10 @@ import com.truonglam.tl_hotel.common.Time;
 import com.truonglam.tl_hotel.handler.MyHandler;
 import com.truonglam.tl_hotel.model.HotelInformation;
 import com.truonglam.tl_hotel.viewmodel.HotelInformationViewModel;
-import com.truonglam.tl_hotel.webservice.Client;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class LoginFragment extends Fragment implements View.OnClickListener {
 
@@ -100,16 +96,17 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         hotelInfoViewModel = ViewModelProvider.AndroidViewModelFactory
                 .getInstance(getActivity().getApplication())
                 .create(HotelInformationViewModel.class);
-        hotelInfoViewModel.getHotelInformation(username,password).observe(getActivity(), new Observer<HotelInformation>() {
+        hotelInfoViewModel.getHotelInformation(username, password).observe(getActivity(), new Observer<HotelInformation>() {
             @Override
             public void onChanged(@Nullable HotelInformation hotelInformation) {
-                if(hotelInformation == null){
+                if (hotelInformation == null) {
                     Toast.makeText(getActivity(), "Tài khoản hoặc mật khẩu không đúng",
                             Toast.LENGTH_SHORT).show();
+                    stopProgressBar();
                     return;
                 }
 
-                HotelInformationFragment fragment = HotelInformationFragment.newInstance(hotelInformation,username);
+                HotelInformationFragment fragment = HotelInformationFragment.newInstance(hotelInformation, username);
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.container, fragment)
                         .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
@@ -147,6 +144,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         };
 
         new MyHandler(runnable, Time.SERVER_TIME_OUT).start();
+    }
+
+    private void stopProgressBar() {
+        pbLogin.setVisibility(View.INVISIBLE);
     }
 
 

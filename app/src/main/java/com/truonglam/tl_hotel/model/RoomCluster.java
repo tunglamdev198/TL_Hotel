@@ -2,7 +2,9 @@ package com.truonglam.tl_hotel.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class RoomCluster {
+import java.io.Serializable;
+
+public class RoomCluster implements Serializable {
     @SerializedName("id")
     private String id;
 

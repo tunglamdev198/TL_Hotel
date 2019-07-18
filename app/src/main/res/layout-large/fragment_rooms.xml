@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -43,12 +44,24 @@
         android:layout_height="match_parent"/>
 </LinearLayout>
 
-    <com.github.ybq.android.spinkit.SpinKitView
+    <ProgressBar
         android:visibility="gone"
         android:id="@+id/spinkit_loading"
         style="@style/SpinKitView.Circle"
-        android:layout_gravity="center"
-        android:layout_width="@dimen/progress_bar_size"
-        android:layout_height="@dimen/progress_bar_size" />
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="@dimen/progress_bar_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btn_add"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="@dimen/margin_top"
+        android:layout_marginEnd="@dimen/margin_end"
+        app:backgroundTint="@color/cardViewRed"
+        android:visibility="gone"
+        android:src="@drawable/ic_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </FrameLayout>

@@ -2,6 +2,7 @@ package com.truonglam.tl_hotel.ui.fragments;
 
 
 import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,8 +12,12 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 
 import com.truonglam.tl_hotel.R;
@@ -38,6 +43,9 @@ import retrofit2.Response;
 public class ServiceFragment extends Fragment implements View.OnClickListener {
 
     public static final String TAG = "ServiceFragment";
+
+    @BindView(R.id.btnBack)
+    ImageView btnBack;
 
     @BindView(R.id.rvListService)
     RecyclerView rvListService;
@@ -79,39 +87,81 @@ public class ServiceFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         configRecyclerView();
+        registerListener();
+    }
+
+    private void registerListener() {
+        btnBack.setOnClickListener(this);
+    }
+
+    private void openEditServiceFragment() {
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, new EditServiceFragment())
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private void showPopupMenu() {
+        adapter.setOnItemClickListener(new HotelServiceAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClicked(int position, View view) {
+                PopupMenu menu = new PopupMenu(getActivity(), view);
+                MenuInflater inflater = menu.getMenuInflater();
+                inflater.inflate(R.menu.menu_edit_delete, menu.getMenu());
+                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.mnu_view:
+                                break;
+
+                            case R.id.mnu_edit:
+                                openEditServiceFragment();
+                                break;
+
+                            case R.id.mnu_delete:
+                                break;
+                        }
+                        return true;
+                    }
+                });
+                menu.show();
+            }
+        });
+
     }
 
     private void configRecyclerView() {
         pbLoading.setVisibility(View.VISIBLE);
         hotelInformation =
                 (HotelInformation) getArguments().getSerializable(Key.KEY_HOTEL_INFORMATION);
-        //Log.d(TAG, hotelInformation.toString());
         String id = hotelInformation.getHotelId();
         String token = hotelInformation.getAccessToken();
-        Client.getService().getServices(token, id).enqueue(new Callback<HotelServiceResponse>() {
-            @Override
-            public void onResponse(Call<HotelServiceResponse> call, Response<HotelServiceResponse> response) {
-                List<HotelService> services = response.body().getHotelServices();
+
                 mViewModel = ViewModelProvider.AndroidViewModelFactory
                         .getInstance(getActivity().getApplication())
                         .create(ServicesViewModel.class);
-                mViewModel.setHotelServices(services);
-                adapter = new HotelServiceAdapter(services, getActivity());
-                rvListService.setAdapter(adapter);
-                pbLoading.setVisibility(View.INVISIBLE);
-            }
+                 mViewModel.getHotelServices(token,id).observe(this, new Observer<List<HotelService>>() {
+                    @Override
+                    public void onChanged(@Nullable List<HotelService> services) {
+                        adapter = new HotelServiceAdapter(services, getActivity());
+                        rvListService.setAdapter(adapter);
+                        pbLoading.setVisibility(View.INVISIBLE);
+                        showPopupMenu();
+                    }
+                });
 
-            @Override
-            public void onFailure(Call<HotelServiceResponse> call, Throwable t) {
 
-            }
-        });
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fabAddService:
+                break;
+
+            case R.id.btnBack:
+                getActivity().getSupportFragmentManager().popBackStack();
                 break;
 
             default:

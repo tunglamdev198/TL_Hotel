@@ -1,6 +1,10 @@
 package com.truonglam.tl_hotel.ui.fragments;
 
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,6 +13,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,76 +30,64 @@ import es.dmoral.toasty.Toasty;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EditTittleFragment extends DialogFragment   implements View.OnClickListener {
+public class EditTittleFragment extends AppCompatDialogFragment {
 
-    @BindView(R.id.btnDone)
-    Button btnDone;
+    private TextInputEditText edtTittle;
 
-    @BindView(R.id.btnCancel)
-    Button btnCancel;
+    private String mode;
 
-    @BindView(R.id.edtTittle)
-    TextInputEditText edtTittle;
+    private TittleDialogListener tittleDialogListener;
 
 
     public EditTittleFragment() {
     }
 
-    public static EditTittleFragment newInstance(String tittle) {
+    public static EditTittleFragment newInstance(String tittle, String mode) {
 
         Bundle args = new Bundle();
         args.putString(Key.KEY_TITTLE, tittle);
+        args.putString(Key.KEY_MODE,mode);
         EditTittleFragment fragment = new EditTittleFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_edit_tittle, container, false);
-        ButterKnife.bind(this, view);
-        return view;
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        mode = getArguments().getString(Key.KEY_MODE);
+        String tittle = getArguments().getString(Key.KEY_TITTLE);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View view = inflater.inflate(R.layout.fragment_edit_tittle,null);
+        edtTittle = view.findViewById(R.id.edtTittle);
+        edtTittle.setText(tittle);
+        edtTittle.setSelection(tittle.length());
+        builder.setView(view)
+                .setTitle(mode)
+                .setCancelable(false)
+                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton("Xong", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String tittle = edtTittle.getText().toString().trim();
+                        tittleDialogListener.applyText(tittle);
+                        dialog.dismiss();
+                    }
+                });
+        return builder.create();
+
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        edtTittle.setText(getArguments().getString(Key.KEY_TITTLE));
-        registerListener();
+    public void setTittleDialogListener(TittleDialogListener tittleDialogListener) {
+        this.tittleDialogListener = tittleDialogListener;
     }
 
-    private void registerListener() {
-        btnDone.setOnClickListener(this);
-        btnCancel.setOnClickListener(this);
-    }
-
-    private void editTittle() {
-        String tittle = edtTittle.getText().toString().trim();
-        if (tittle.isEmpty()) {
-            Toasty.error(getActivity(), "Tiêu đề không được để trống!",
-                    Toast.LENGTH_SHORT, true)
-                    .show();
-
-            return;
-        }
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-        FragmentTransaction trans = manager.beginTransaction();
-        trans.remove(this);
-        trans.commit();
-        manager.popBackStack();
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btnDone:
-                editTittle();
-                break;
-
-            case R.id.btnCancel:
-                getActivity().getSupportFragmentManager().popBackStack();
-                break;
-        }
+    public interface TittleDialogListener{
+        void applyText(String tittle);
     }
 }
