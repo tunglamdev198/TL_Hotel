@@ -32,103 +32,173 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <android.support.v7.widget.CardView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/card_view_tittle_height"
-        android:layout_marginStart="@dimen/margin_start"
-        android:layout_marginTop="@dimen/margin_top"
-        android:layout_marginEnd="@dimen/margin_end">
+        android:layout_height="match_parent">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/txtTittleApperance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <android.support.v7.widget.CardView
+                android:layout_width="@dimen/image_avatar_size"
+                android:layout_height="@dimen/image_avatar_size"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginStart="@dimen/margin_start"
                 android:layout_marginTop="@dimen/margin_top"
-                android:text="@string/string_tittle"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textSize="@dimen/text_size_edittext" />
+                android:layout_marginEnd="@dimen/margin_end">
 
-            <TextView
-                android:id="@+id/txtTittle"
-                android:layout_width="@dimen/editext_tittle_notification"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtTittleApperance"
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/darker_gray"
+                    android:padding="@dimen/frame_image_border">
+
+                    <ImageView
+                        android:id="@+id/img_avatar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        />
+
+                    <ImageView
+                        android:id="@+id/btn_edit_avatar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|end"
+                        android:layout_marginEnd="@dimen/margin_top"
+                        android:layout_marginBottom="@dimen/margin_top"
+                        android:src="@drawable/ic_add_a_photo_black" />
+                </FrameLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/cardview_item_tittle"
                 android:layout_marginStart="@dimen/margin_start"
                 android:layout_marginTop="@dimen/margin_top"
-                android:text="Kính chào quý khách....."
-                android:textSize="@dimen/text_size_edittext" />
+                android:layout_marginEnd="@dimen/margin_end">
 
-            <ImageView
-                android:id="@+id/btnEdit"
-                android:layout_width="@dimen/icon_logo_size"
-                android:layout_height="@dimen/icon_logo_size"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="@dimen/margin_start"
-                android:layout_marginEnd="@dimen/margin_end"
-                android:foreground="?attr/selectableItemBackground"
-                android:src="@drawable/ic_edit" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/btnDelete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/btnEdit"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="@dimen/margin_start"
-                android:layout_marginEnd="@dimen/margin_end"
-                android:foreground="?attr/selectableItemBackground"
-                android:src="@drawable/ic_delete_forever" />
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
+                    <TextView
+                        android:id="@+id/txt_hotel_name_apperance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_start"
+                        android:layout_marginTop="@dimen/margin_top"
+                        android:textColor="@color/colorPrimary"
+                        android:text="@string/string_hotel_name"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textSize="@dimen/text_size_edittext" />
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/card_view_background_height"
-        android:layout_marginStart="@dimen/margin_start"
-        android:layout_marginTop="@dimen/margin_top"
-        android:layout_marginEnd="@dimen/margin_end">
+                    <TextView
 
+                        android:id="@+id/txt_hotel_name"
+                        android:layout_width="@dimen/editext_tittle_notification"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txt_hotel_name_apperance"
+                        android:layout_marginStart="@dimen/margin_start"
+                        android:layout_marginTop="@dimen/margin_top"
+                        android:text="Kính chào quý khách....."
+                        android:textSize="@dimen/text_size_edittext" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/txt_tittle_apperance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txt_hotel_name"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_marginStart="@dimen/margin_start"
+                        android:layout_marginTop="@dimen/margin_top"
+                        android:text="@string/string_tittle"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textSize="@dimen/text_size_edittext" />
 
-            <TextView
-                android:id="@+id/txtBackground"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                    <TextView
+                        android:id="@+id/txt_tittle"
+                        android:layout_width="@dimen/editext_tittle_notification"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txt_tittle_apperance"
+                        android:layout_marginStart="@dimen/margin_start"
+                        android:layout_marginTop="@dimen/margin_top"
+                        android:text="Kính chào quý khách....."
+                        android:textSize="@dimen/text_size_edittext" />
+
+                    <ImageView
+                        android:id="@+id/btnEdit"
+                        android:layout_width="@dimen/icon_logo_size"
+                        android:layout_height="@dimen/icon_logo_size"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="@dimen/margin_start"
+                        android:layout_marginEnd="@dimen/margin_end"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:src="@drawable/ic_edit" />
+
+                    <ImageView
+                        android:id="@+id/btnDelete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/btnEdit"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="@dimen/margin_start"
+                        android:layout_marginEnd="@dimen/margin_end"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:src="@drawable/ic_delete_forever" />
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/card_view_background_height"
                 android:layout_marginStart="@dimen/margin_start"
                 android:layout_marginTop="@dimen/margin_top"
-                android:text="@string/string_photos"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textSize="@dimen/text_size_edittext" />
+                android:layout_marginEnd="@dimen/margin_end">
 
-            <ImageView
-                android:id="@+id/btnAddPhoto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="@dimen/margin_top"
-                android:layout_marginEnd="@dimen/margin_end"
-                android:foreground="?attr/selectableItemBackground"
-                android:src="@drawable/ic_add_a_photo_black" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvListImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtBackground"
-                android:layout_marginStart="@dimen/margin_start"
-                android:layout_marginTop="@dimen/margin_top"
-                android:scaleType="centerCrop"
-                android:src="@drawable/img_demo" />
-        </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-    </android.support.v7.widget.CardView>
+                    <TextView
+                        android:id="@+id/txtBackground"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_start"
+                        android:layout_marginTop="@dimen/margin_top"
+                        android:textColor="@color/colorPrimary"
+                        android:text="@string/string_photos"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textSize="@dimen/text_size_edittext" />
+
+                    <ImageView
+                        android:id="@+id/btnAddPhoto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="@dimen/margin_top"
+                        android:layout_marginEnd="@dimen/margin_end"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:src="@drawable/ic_add_a_photo_black" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rvListImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txtBackground"
+                        android:layout_marginStart="@dimen/margin_start"
+                        android:layout_marginTop="@dimen/margin_top"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/img_demo" />
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

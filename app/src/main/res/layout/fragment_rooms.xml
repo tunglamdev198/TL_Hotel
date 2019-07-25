@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/refresh_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 <FrameLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -36,6 +41,16 @@
 
     </android.support.v7.widget.Toolbar>
 
+    <TextView
+        android:visibility="gone"
+        android:text="Danh sách cụm phòng hiện tại đang trống"
+        android:textColor="@android:color/holo_red_dark"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin_top"
+        android:id="@+id/txt_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_list_room_cluster"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager"
@@ -65,3 +80,4 @@
         android:layout_height="wrap_content" />
 
 </FrameLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

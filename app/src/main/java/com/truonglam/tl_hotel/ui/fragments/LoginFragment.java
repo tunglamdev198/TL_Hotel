@@ -15,9 +15,11 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.truonglam.tl_hotel.R;
+import com.truonglam.tl_hotel.TLApp;
 import com.truonglam.tl_hotel.common.Time;
 import com.truonglam.tl_hotel.handler.MyHandler;
 import com.truonglam.tl_hotel.model.HotelInformation;
+import com.truonglam.tl_hotel.utils.SavingUPSharePref;
 import com.truonglam.tl_hotel.viewmodel.HotelInformationViewModel;
 
 import butterknife.BindView;
@@ -94,46 +96,32 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private void doLogin() {
         loadProgressBar();
         hotelInfoViewModel = ViewModelProvider.AndroidViewModelFactory
-                .getInstance(getActivity().getApplication())
+                .getInstance(TLApp.getInstance())
                 .create(HotelInformationViewModel.class);
-        hotelInfoViewModel.getHotelInformation(username, password).observe(getActivity(), new Observer<HotelInformation>() {
+
+        hotelInfoViewModel.getHotelInformation(username, password)
+                .observe(getActivity(), new Observer<HotelInformation>() {
             @Override
             public void onChanged(@Nullable HotelInformation hotelInformation) {
                 if (hotelInformation == null) {
+                    stopProgressBar();
                     Toast.makeText(getActivity(), "Tài khoản hoặc mật khẩu không đúng",
                             Toast.LENGTH_SHORT).show();
-                    stopProgressBar();
                     return;
                 }
 
                 HotelInformationFragment fragment = HotelInformationFragment.newInstance(hotelInformation, username);
-                getActivity().getSupportFragmentManager().beginTransaction()
+                SavingUPSharePref.savePassword(password,getActivity());
+                SavingUPSharePref.saveUsername(username,getActivity());
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
                         .replace(R.id.container, fragment)
-                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                        .setCustomAnimations(R.anim.anim_slide_in_left, R.anim.anim_slide_out_left)
                         .commit();
             }
         });
-//        Client.getService().getInformation(username, password).enqueue(new Callback<HotelInformation>() {
-//            @Override
-//            public void onResponse(Call<HotelInformation> call, Response<HotelInformation> response) {
-//                HotelInformation hotelInformation = response.body();
-//                HotelInformationFragment fragment = HotelInformationFragment.newInstance(hotelInformation);
-//                if (!response.isSuccessful()) {
-//                    Toast.makeText(getActivity(), "Tài khoản hoặc mật khẩu không đúng",
-//                            Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//                getActivity().getSupportFragmentManager().beginTransaction()
-//                        .replace(R.id.container, fragment)
-//                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-//                        .commit();
-//            }
-//
-//            @Override
-//            public void onFailure(Call<HotelInformation> call, Throwable t) {
-//            }
-//        });
     }
+
 
     private void loadProgressBar() {
         pbLogin.setVisibility(View.VISIBLE);
@@ -147,7 +135,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
     private void stopProgressBar() {
-        pbLogin.setVisibility(View.INVISIBLE);
+        pbLogin.setVisibility(View.GONE);
     }
 
 

@@ -1,7 +1,9 @@
 package com.truonglam.tl_hotel.ui.fragments;
 
 
+import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModelProvider;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -47,17 +49,20 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.btnBack)
     ImageView btnBack;
 
+    @BindView(R.id.img_logout)
+    ImageView imgLogout;
+
     private HotelInformation hotelInformation;
 
 
     public AccountFragment() {
     }
 
-    public static AccountFragment newInstance(HotelInformation hotelInformation,String username) {
+    public static AccountFragment newInstance(HotelInformation hotelInformation, String username) {
 
         Bundle args = new Bundle();
-        args.putSerializable(Key.KEY_HOTEL_INFORMATION,hotelInformation);
-        args.putString(Key.KEY_USER,username);
+        args.putSerializable(Key.KEY_HOTEL_INFORMATION, hotelInformation);
+        args.putString(Key.KEY_USER, username);
         AccountFragment fragment = new AccountFragment();
         fragment.setArguments(args);
         return fragment;
@@ -79,13 +84,14 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         registerListener();
     }
 
-    private void initViews(){
+    private void initViews() {
         hotelInformation = (HotelInformation) getArguments().getSerializable(Key.KEY_HOTEL_INFORMATION);
     }
 
-    private void registerListener(){
+    private void registerListener() {
         btnDone.setOnClickListener(this);
         btnBack.setOnClickListener(this);
+        imgLogout.setOnClickListener(this);
     }
 
     private void vadidatePassword() {
@@ -93,20 +99,20 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         String newPassword = edtNewPassword.getText().toString().trim();
         String confirmPassword = edtConfirmPassword.getText().toString().trim();
 
-        if(!newPassword.equals(confirmPassword)){
-            Toasty.warning(getActivity(),"Vui lòng nhập đúng mật khẩu xác nhận",
-                    Toast.LENGTH_SHORT,false);
+        if (!newPassword.equals(confirmPassword)) {
+            Toasty.warning(getActivity(), "Vui lòng nhập đúng mật khẩu xác nhận",
+                    Toast.LENGTH_SHORT, false);
             return;
         }
 
-        if(oldPassword.equals(newPassword)){
-            Toasty.warning(getActivity(),"Mật khẩu không thay đổi",
-                    Toast.LENGTH_SHORT,false);
+        if (oldPassword.equals(newPassword)) {
+            Toasty.warning(getActivity(), "Mật khẩu không thay đổi",
+                    Toast.LENGTH_SHORT, false);
             return;
         }
     }
 
-    private void changePassword(){
+    private void changePassword() {
         vadidatePassword();
         String token = hotelInformation.getAccessToken();
         String password = edtOldPassword.getText().toString().trim();
@@ -130,6 +136,34 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 //        });
     }
 
+    private void logoutAccount(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setCancelable(false)
+                .setMessage("Bạn có muốn đăng xuất không?")
+                .setTitle("Đăng xuất")
+                .setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                       openLoginFragment();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void openLoginFragment(){
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container,new LoginFragment())
+                .commit();
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -138,6 +172,10 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.btnBack:
                 getActivity().getSupportFragmentManager().popBackStack();
+                break;
+
+            case R.id.img_logout:
+                logoutAccount();
                 break;
 
             default:

@@ -14,6 +14,7 @@
     <string name="hotel_logout">Đăng xuất</string>
 
     <string name="string_tittle">Tiêu đề</string>
+    <string name="string_hotel_name">Tên khách sạn</string>
     <string name="string_photos">Hình ảnh</string>
     <string name="string_home_page_tittle">Màn hình chính</string>
 
@@ -21,8 +22,23 @@
     <string name="option_done">Xong</string>
     <string name="option_cancel">Hủy</string>
 
+    <string name="action_view_cluster_room">Xem danh sách phòng</string>
+    <string name="action_delete_cluster_room">Xóa cụm phòng</string>
+    <string name="action_edit_cluster_room">Sửa cụm phòng</string>
+    <string name="action_edit_room">Sửa phòng</string>
+    <string name="action_delete_room">Xóa phòng</string>
+
     <string name="msg_cluster_room_name_validate">Tên cụm phòng không có sự thay đổi</string>
     <string name="msg_room_name_validate">Tên phòng không có sự thay đổi</string>
+    <string name="msg_hotel_info_validate">Thông tin đã nhập không có sự thay đổi</string>
+    <string name="msg_hotel_delete_confirm">Bạn không thể xóa cụm phòng này
+                                            Do đang ở trạng thái Mặc định</string>
+
+    <string name="icon_service">&#xf562;</string>
+    <string name="icon_notification">&#xf0f3;</string>
+    <string name="icon_cluster_room">&#xf594;</string>
+    <string name="icon_room">&#xf015;</string>
+    <string name="icon_account">&#xf2f5;</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

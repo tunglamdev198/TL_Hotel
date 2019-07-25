@@ -1,5 +1,6 @@
 package com.truonglam.tl_hotel.adapter;
 
+import android.arch.lifecycle.ViewModelProvider;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
@@ -10,24 +11,35 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.truonglam.tl_hotel.R;
-import com.truonglam.tl_hotel.model.HotelService;
+import com.truonglam.tl_hotel.TLApp;
 import com.truonglam.tl_hotel.model.RoomCluster;
+import com.truonglam.tl_hotel.viewmodel.RoomClusterViewModel;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ClusterRoomAdapter  extends RecyclerView.Adapter<ClusterRoomAdapter.ViewHolder>{
+public class ClusterRoomAdapter extends RecyclerView.Adapter<ClusterRoomAdapter.ViewHolder> {
     private List<RoomCluster> roomClusters;
     private LayoutInflater inflater;
     private Context context;
-    private HotelServiceAdapter.OnItemClickListener onItemClickListener;
+    private OnItemClickListener onItemClickListener;
+
+    private int index;
+
+    private RoomClusterViewModel mViewModel;
 
     public ClusterRoomAdapter(List<RoomCluster> roomClusters, Context context) {
         this.roomClusters = roomClusters;
         this.context = context;
         inflater = LayoutInflater.from(context);
+
+        mViewModel = ViewModelProvider.AndroidViewModelFactory
+                .getInstance(TLApp.getInstance())
+                .create(RoomClusterViewModel.class);
+        mViewModel.setRoomCLusterLiveData(roomClusters);
+
     }
 
     @NonNull
@@ -41,10 +53,11 @@ public class ClusterRoomAdapter  extends RecyclerView.Adapter<ClusterRoomAdapter
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         RoomCluster roomCluster = roomClusters.get(position);
         holder.txtClusterRoomName.setText(roomCluster.getName());
+        index = holder.getAdapterPosition();
         holder.cvClusterRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onItemClickListener.onItemClicked(holder.getAdapterPosition(),v);
+                onItemClickListener.onItemClicked(holder.getAdapterPosition(), v);
             }
         });
     }
@@ -55,8 +68,12 @@ public class ClusterRoomAdapter  extends RecyclerView.Adapter<ClusterRoomAdapter
     }
 
 
-    public void setOnItemClickListener(HotelServiceAdapter.OnItemClickListener onItemClickListener) {
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
+    }
+
+    public void setRoomClusters(List<RoomCluster> roomClusters) {
+        this.roomClusters = roomClusters;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -72,6 +89,7 @@ public class ClusterRoomAdapter  extends RecyclerView.Adapter<ClusterRoomAdapter
             ButterKnife.bind(this, itemView);
         }
     }
+
 
     public interface OnItemClickListener {
         void onItemClicked(int position, View view);

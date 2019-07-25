@@ -49,7 +49,7 @@ public class AddEditRoomClusterFragment extends AppCompatDialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.fragment_add_edit_room_cluster,null);
         edtClusterName = view.findViewById(R.id.edt_cruter_name);
-        if(mode.equals("Sửa tên Cụm phòng")){
+        if(mode.equals(Key.MODE_EDIT_CLUSTER_ROOM)){
             edtClusterName.setText(clusterName);
             edtClusterName.setSelection(edtClusterName.getText().length());
         }

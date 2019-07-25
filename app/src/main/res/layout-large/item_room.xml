@@ -24,7 +24,7 @@
                 android:layout_marginStart="@dimen/margin_start"
                 android:layout_width="@dimen/icon_menu_size"
                 android:layout_height="@dimen/icon_menu_size"
-                android:src="@drawable/icon_room" />
+                android:src="@drawable/icon_room_hotel" />
 
             <TextView
                 android:id="@+id/txt_room_name"
@@ -35,7 +35,7 @@
                 android:text="Lâm"
                 android:layout_toRightOf="@id/img_logo"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textSize="@dimen/text_size_item_service" />
+                android:textSize="@dimen/text_size_edittext" />
 
         </LinearLayout>
 

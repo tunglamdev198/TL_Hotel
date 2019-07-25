@@ -1,5 +1,7 @@
 package com.truonglam.tl_hotel.webservice;
 
+import com.truonglam.tl_hotel.model.ClusterRoomUpdating;
+import com.truonglam.tl_hotel.model.HotelBackground;
 import com.truonglam.tl_hotel.model.HotelInformation;
 import com.truonglam.tl_hotel.model.HotelServiceResponse;
 import com.truonglam.tl_hotel.model.PasswordChanging;
@@ -50,6 +52,14 @@ public interface IService {
     Call<Void> createRoomCluster(@Header("token") String token,
                                  @Body RoomCluster roomCluster);
 
+    @POST("api/cumphong/update")
+    Call<Void> updateClusterRoom(@Header("token") String token,
+                                 @Body ClusterRoomUpdating clusterRoomUpdating);
+
+    @POST("api/cumphong/delete")
+    Call<Void> deleteClusterRoom(@Header("token") String token,
+                                 @Query("cumphong_id")String cumphongId);
+
 
     /**
      *
@@ -70,5 +80,17 @@ public interface IService {
     Call<Void> updateRoom(@Header("token") String token,
                           @Body RoomUpdating roomUpdating);
 
+    @POST("api/phong/delete")
+    Call<Void> deleteRoom(@Header("token") String token,
+                                 @Query("phong_id")String phongId);
+
+
+    /**
+     * Get Hotel Background
+     */
+
+    @GET("api/user/getBackground")
+    Call<HotelBackground> getBackground(@Header("token") String token,
+                                        @Query("hotel_id") String hotelId);
 
 }

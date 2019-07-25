@@ -5,6 +5,7 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
+import com.truonglam.tl_hotel.model.ClusterRoomUpdating;
 import com.truonglam.tl_hotel.model.RoomCluster;
 import com.truonglam.tl_hotel.model.RoomClusterResponse;
 import com.truonglam.tl_hotel.webservice.Client;
@@ -19,6 +20,7 @@ public class RoomClusterViewModel extends AndroidViewModel {
     private MutableLiveData<List<RoomCluster>> roomCLusterLiveData;
     public RoomClusterViewModel(@NonNull Application application) {
         super(application);
+        roomCLusterLiveData = new MutableLiveData<>();
     }
 
     public MutableLiveData<List<RoomCluster>> getRoomCLusterLiveData(String token, String id) {
@@ -42,9 +44,59 @@ public class RoomClusterViewModel extends AndroidViewModel {
         roomCLusterLiveData.setValue(roomClusters);
     }
 
-    public void addRoomCluster(RoomCluster roomCluster){
-        List<RoomCluster> roomClusters = roomCLusterLiveData.getValue();
-        roomClusters.add(roomCluster);
-        roomCLusterLiveData.setValue(roomClusters);
+    public void addRoomCluster(String token, final RoomCluster roomCluster){
+        Client.getService().createRoomCluster(token, roomCluster).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void deleteRoomCluster(String token, String id){
+        Client.getService().deleteClusterRoom(token, id).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void editRoomCluster(String token, ClusterRoomUpdating clusterRoomUpdating){
+        Client.getService().updateClusterRoom(token,clusterRoomUpdating).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public MutableLiveData<List<RoomCluster>> updateList(String id, String token){
+
+        Client.getService().getClusterRooms(token,id).enqueue(new Callback<RoomClusterResponse>() {
+            @Override
+            public void onResponse(Call<RoomClusterResponse> call, Response<RoomClusterResponse> response) {
+                roomCLusterLiveData.setValue(response.body().getRoomClusters());
+            }
+
+            @Override
+            public void onFailure(Call<RoomClusterResponse> call, Throwable t) {
+
+            }
+        });
+        return roomCLusterLiveData;
     }
 }

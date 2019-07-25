@@ -1,7 +1,6 @@
 package com.truonglam.tl_hotel.ui.fragments;
 
 
-import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,17 +23,12 @@ import com.truonglam.tl_hotel.adapter.HotelServiceAdapter;
 import com.truonglam.tl_hotel.common.Key;
 import com.truonglam.tl_hotel.model.HotelInformation;
 import com.truonglam.tl_hotel.model.HotelService;
-import com.truonglam.tl_hotel.model.HotelServiceResponse;
 import com.truonglam.tl_hotel.viewmodel.ServicesViewModel;
-import com.truonglam.tl_hotel.webservice.Client;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -107,7 +100,7 @@ public class ServiceFragment extends Fragment implements View.OnClickListener {
             public void onItemClicked(int position, View view) {
                 PopupMenu menu = new PopupMenu(getActivity(), view);
                 MenuInflater inflater = menu.getMenuInflater();
-                inflater.inflate(R.menu.menu_edit_delete, menu.getMenu());
+                inflater.inflate(R.menu.menu_edit_delete_room, menu.getMenu());
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {

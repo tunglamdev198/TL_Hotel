@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
 import com.truonglam.tl_hotel.R;
+import com.truonglam.tl_hotel.webservice.Client;
 
 import java.util.List;
 
@@ -18,12 +20,12 @@ import butterknife.ButterKnife;
 
 public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.ViewHolder> {
 
-    private List<Integer> images;
+    private List<String> images;
     private LayoutInflater inflater;
     private Context context;
     private OnItemClickListener onItemClickListener;
 
-    public ImageListAdapter(List<Integer> images, Context context) {
+    public ImageListAdapter(List<String> images, Context context) {
         this.images = images;
         this.context = context;
         inflater = LayoutInflater.from(context);
@@ -38,8 +40,8 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-        int image = images.get(position);
-        holder.imgBackground.setImageResource(image);
+        String image = images.get(position);
+        Picasso.with(context).load(Client.BASE_URL+ image).into(holder.imgBackground);
         holder.cvImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

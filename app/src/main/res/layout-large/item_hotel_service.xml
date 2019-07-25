@@ -40,7 +40,7 @@
                 android:layout_marginStart="@dimen/margin_start"
                 android:text="Lâm"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textSize="@dimen/text_size_item_service" />
+                android:textSize="@dimen/text_size_edittext" />
 
         </LinearLayout>
 

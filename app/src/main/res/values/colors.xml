@@ -6,6 +6,8 @@
     <color name="colorStartGradientBlueStart">#027CDA</color>
     <color name="colorStartGradientBlueEnd">#136EAF</color>
 
+    <color name="color_app_background">#81B3CC</color>
+
     <color name="colorGray">#AAA3A3</color>
 
     <color name="cardViewRed">#c4302b</color>

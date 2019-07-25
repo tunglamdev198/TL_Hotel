@@ -10,6 +10,6 @@
         android:startColor="@color/colorStartGradientBlueStart"
         android:type="linear" />
 
-    <corners android:radius="20dp" />
+    <corners android:radius="@dimen/button_radius" />
 
 </shape>

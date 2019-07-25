@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.truonglam.tl_hotel.R;
 import com.truonglam.tl_hotel.common.Key;
+import com.truonglam.tl_hotel.model.HotelInformation;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,19 +34,22 @@ import es.dmoral.toasty.Toasty;
 public class EditTittleFragment extends AppCompatDialogFragment {
 
     private TextInputEditText edtTittle;
+    private TextInputEditText edtHotelName;
 
     private String mode;
 
     private TittleDialogListener tittleDialogListener;
 
+    private HotelInformation hotelInfo;
+
 
     public EditTittleFragment() {
     }
 
-    public static EditTittleFragment newInstance(String tittle, String mode) {
+    public static EditTittleFragment newInstance(HotelInformation hotelInfo, String mode) {
 
         Bundle args = new Bundle();
-        args.putString(Key.KEY_TITTLE, tittle);
+        args.putSerializable(Key.KEY_HOTEL_INFORMATION, hotelInfo);
         args.putString(Key.KEY_MODE,mode);
         EditTittleFragment fragment = new EditTittleFragment();
         fragment.setArguments(args);
@@ -55,13 +59,22 @@ public class EditTittleFragment extends AppCompatDialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         mode = getArguments().getString(Key.KEY_MODE);
-        String tittle = getArguments().getString(Key.KEY_TITTLE);
+        hotelInfo =(HotelInformation) getArguments().getSerializable(Key.KEY_HOTEL_INFORMATION);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.fragment_edit_tittle,null);
-        edtTittle = view.findViewById(R.id.edtTittle);
-        edtTittle.setText(tittle);
-        edtTittle.setSelection(tittle.length());
+        edtTittle = view.findViewById(R.id.edt_tittle);
+        edtHotelName = view.findViewById(R.id.edt_hotel_name);
+
+        if(mode.equals(Key.MODE_EDIT_ROOM)){
+            edtTittle.setText(hotelInfo.getTittle());
+            edtTittle.setSelection(hotelInfo.getTittle().length());
+
+            edtHotelName.setText(hotelInfo.getName());
+            edtHotelName.setSelection(hotelInfo.getName().length());
+        }
+
         builder.setView(view)
                 .setTitle(mode)
                 .setCancelable(false)
@@ -75,7 +88,16 @@ public class EditTittleFragment extends AppCompatDialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String tittle = edtTittle.getText().toString().trim();
-                        tittleDialogListener.applyText(tittle);
+                        String hotelName = edtHotelName.getText().toString().trim();
+
+                        if(tittle.equals(hotelInfo.getTittle())
+                                &&hotelName.equals(hotelInfo.getName())){
+                            Toasty.warning(getActivity(),R.string.msg_hotel_info_validate,
+                                    Toast.LENGTH_SHORT,true).show();
+                            return;
+                        }
+
+                        tittleDialogListener.applyText(tittle,hotelName);
                         dialog.dismiss();
                     }
                 });
@@ -88,6 +110,6 @@ public class EditTittleFragment extends AppCompatDialogFragment {
     }
 
     public interface TittleDialogListener{
-        void applyText(String tittle);
+        void applyText(String tittle, String hotelInfo);
     }
 }

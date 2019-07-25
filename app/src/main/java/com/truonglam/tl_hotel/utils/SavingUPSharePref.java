@@ -6,8 +6,8 @@ import android.preference.PreferenceManager;
 
 import com.truonglam.tl_hotel.common.Key;
 
-public class UsernameSavingSharePref {
-    public UsernameSavingSharePref(){
+public class SavingUPSharePref {
+    public SavingUPSharePref(){
 
     }
     public static void saveUsername(String username, Context context){

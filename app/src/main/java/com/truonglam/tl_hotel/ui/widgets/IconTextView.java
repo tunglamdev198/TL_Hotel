@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.widget.TextView;
 
 @SuppressLint("AppCompatCustomView")
@@ -27,7 +26,7 @@ public class IconTextView extends TextView {
     private void createView() {
         if(!isInEditMode()){
             Typeface tf = Typeface.createFromAsset(getContext().getAssets(),
-                    "fonts/FontAwesome.ttf");
+                    "fonts/FontAwesomeIconSolid.otf");
             setTypeface(tf);
         }
 
