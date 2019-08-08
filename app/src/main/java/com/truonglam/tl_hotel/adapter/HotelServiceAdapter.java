@@ -1,6 +1,7 @@
 package com.truonglam.tl_hotel.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
@@ -9,10 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daimajia.swipe.SwipeLayout;
 import com.truonglam.tl_hotel.R;
 import com.truonglam.tl_hotel.model.HotelService;
+import com.truonglam.tl_hotel.ui.widgets.IconTextView;
 
 import java.util.List;
 
@@ -24,6 +28,7 @@ public class HotelServiceAdapter extends RecyclerView.Adapter<HotelServiceAdapte
     private List<HotelService> services;
     private LayoutInflater inflater;
     private Context context;
+    public boolean check;
     private OnItemClickListener onItemClickListener;
 
     public HotelServiceAdapter(List<HotelService> services, Context context) {
@@ -43,12 +48,42 @@ public class HotelServiceAdapter extends RecyclerView.Adapter<HotelServiceAdapte
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         HotelService hotelService = services.get(position);
         holder.txtServiceName.setText(hotelService.getTittle());
-        holder.imgShowOption.setOnClickListener(new View.OnClickListener() {
+        String serviceIcon = hotelService.getIcon().trim();
+        String temp = new String(Character.toChars(Integer.parseInt(
+                serviceIcon, 16)));
+        String codeColor = hotelService.getColorIcon();
+        holder.imgAvatar.setText(temp);
+        holder.imgAvatar.setTextColor(Color.parseColor(codeColor));
+        holder.swipeMenu.setShowMode(SwipeLayout.ShowMode.PullOut);
+        holder.swipeMenu.addDrag(SwipeLayout.DragEdge.Right, holder.swipeMenu.findViewById(R.id.swipe_rtl));
+
+        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onItemClickListener.onItemClicked(holder.getAdapterPosition(),v);
+                onItemClickListener.onItemClicked(holder.getAdapterPosition(), v);
+                holder.swipeMenu.close();
             }
         });
+
+        holder.btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClickListener.onItemClicked(holder.getAdapterPosition(), v);
+                holder.swipeMenu.close();
+            }
+        });
+
+        if (check == true) {
+            holder.llContent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListener.onItemClicked(holder.getAdapterPosition(), v);
+                }
+            });
+
+        } else return;
+
+
     }
 
     @Override
@@ -57,20 +92,40 @@ public class HotelServiceAdapter extends RecyclerView.Adapter<HotelServiceAdapte
     }
 
 
+
+
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public void setServices(List<HotelService> services) {
+        this.services = services;
+    }
 
-        @BindView(R.id.cvHotelService)
-        CardView cvHotelService;
+    public void updateData(List<HotelService> listService) {
+        setServices(listService);
+        notifyDataSetChanged();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.txtServiceName)
         TextView txtServiceName;
 
-        @BindView(R.id.img_show_optoion)
-        ImageView imgShowOption;
+        @BindView(R.id.img_avatar)
+        IconTextView imgAvatar;
+
+        @BindView(R.id.swipe_menu)
+        SwipeLayout swipeMenu;
+
+        @BindView(R.id.btn_edit)
+        LinearLayout btnEdit;
+
+        @BindView(R.id.btn_delete)
+        LinearLayout btnDelete;
+
+        @BindView(R.id.ll_content)
+        LinearLayout llContent;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

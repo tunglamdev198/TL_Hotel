@@ -20,16 +20,14 @@ public class HotelInformation implements Serializable {
     @SerializedName("tittle")
     private String tittle;
 
-    @SerializedName("type")
-    private String type;
 
-    public HotelInformation(String accessToken, String hotelId, String name, String logo, String tittle, String type) {
+    public HotelInformation(String accessToken, String hotelId, String name, String logo, String tittle) {
         this.accessToken = accessToken;
         this.hotelId = hotelId;
         this.name = name;
         this.logo = logo;
         this.tittle = tittle;
-        this.type = type;
+
     }
 
     public String getAccessToken() {
@@ -72,13 +70,6 @@ public class HotelInformation implements Serializable {
         this.tittle = tittle;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 
     @Override
     public String toString() {
@@ -88,7 +79,6 @@ public class HotelInformation implements Serializable {
                 ", name='" + name + '\'' +
                 ", logo='" + logo + '\'' +
                 ", tittle='" + tittle + '\'' +
-                ", type='" + type + '\'' +
                 '}' + "\n";
     }
 }

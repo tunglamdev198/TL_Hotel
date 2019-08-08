@@ -78,13 +78,13 @@ public class EditTittleFragment extends AppCompatDialogFragment {
         builder.setView(view)
                 .setTitle(mode)
                 .setCancelable(false)
-                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.option_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 })
-                .setPositiveButton("Xong", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.option_done, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String tittle = edtTittle.getText().toString().trim();

@@ -1,57 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.SwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@android:color/white"
             android:orientation="vertical"
             tools:context=".ui.fragments.RoomsFragment">
 
+            <android.support.v7.widget.CardView
+                android:id="@+id/search_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/toolbar_size"
+                android:layout_marginBottom="@dimen/margin_top"
+                android:visibility="gone">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <EditText
+                        android:id="@+id/edt_search"
+                        android:drawableLeft="@drawable/ic_search"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/margin_start"
+                        android:background="@android:color/white"
+                        android:backgroundTint="@android:color/white"
+                        android:hint="Tên phòng" />
+
+                    <ImageView
+                        android:id="@+id/btn_hide"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/margin_end"
+                        android:src="@drawable/ic_close" />
+
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
             <android.support.v7.widget.Toolbar
-                android:id="@+id/tb_rooms"
+                android:id="@+id/tb_list_room"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/toolbar_size"
                 android:background="@color/colorPrimary"
                 android:fitsSystemWindows="true"
                 app:titleTextColor="@android:color/white">
 
-                <ImageView
-                    android:id="@+id/btn_back"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:src="@drawable/ic_back" />
+                <RelativeLayout
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <TextView
-                    android:id="@+id/txt_cluster_room_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/toolbar_tittle_margin_start"
-                    android:text="@string/hotel_room_manager"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/text_size_edittext" />
+                    <ImageView
+                        android:id="@+id/btn_back"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:src="@drawable/ic_back" />
+
+                    <TextView
+                        android:id="@+id/txt_cluster_room_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/hotel_room_manager"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/text_size_edittext" />
+
+                    <com.truonglam.tl_hotel.ui.widgets.IconTextView
+                        android:id="@+id/btn_search"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:textSize="24sp"
+                        android:text="@string/icon_search"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="@dimen/margin_end"/>
+                </RelativeLayout>
+
+
 
             </android.support.v7.widget.Toolbar>
-
-
             <TextView
                 android:id="@+id/txt_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textSize="@dimen/text_size_edittext"
                 android:layout_marginTop="@dimen/margin_top"
+                android:textSize="@dimen/text_size_edittext"
                 android:text="Danh sách phòng hiện tại đang trống"
                 android:textColor="@android:color/holo_red_dark"
                 android:visibility="gone" />
@@ -60,6 +109,7 @@
                 android:id="@+id/rv_list_room"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/margin_top"
                 android:scrollbars="vertical"
                 app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
         </LinearLayout>

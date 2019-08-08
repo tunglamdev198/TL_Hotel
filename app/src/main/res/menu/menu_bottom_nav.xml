@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/mnu_notification"
+        android:title="@string/hotel_notification"
+        android:icon="@drawable/icon_notification"
+        />
+
+    <item android:id="@+id/mnu_room"
+        android:title= "@string/hotel_room_manager"
+        android:icon="@drawable/ic_room_menu"
+        />
+
+    <item android:id="@+id/mnu_service"
+        android:title="@string/hotel_service"
+        android:icon="@drawable/icon_service"/>
+
+    <item android:id="@+id/mnu_account"
+        android:title="@string/hotel_account_management"
+        android:icon="@drawable/icon_account"/>
+
+
+</menu>

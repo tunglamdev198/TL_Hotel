@@ -20,7 +20,11 @@
 
     <dimen name="image_hottelbox_width">400dp</dimen>
     <dimen name="image_hottelbox_height">80dp</dimen>
-    <dimen name="image_avatar_size">280dp</dimen>
+
+    <dimen name="image_hottelbox_splash_width">480dp</dimen>
+    <dimen name="image_hottelbox_splash_height">120dp</dimen>
+
+    <dimen name="image_avatar_size">200dp</dimen>
 
     <dimen name="icon_logo_size">48dp</dimen>
 
@@ -36,7 +40,7 @@
     <dimen name="icon_item_size">48sp</dimen>
 
     <dimen name="cardview_item_rv">240dp</dimen>
-    <dimen name="cardview_item_tittle">312dp</dimen>
+    <dimen name="cardview_item_tittle">624dp</dimen>
 
     <dimen name="icon_delete_image_size">40dp</dimen>
     <dimen name="edit_text_input_height">112dp</dimen>
@@ -50,6 +54,14 @@
 
     <dimen name="button_radius">40dp</dimen>
     <dimen name="edittext_radius">20dp</dimen>
+
+    <dimen name="spinkit_width">140dp</dimen>
+    <dimen name="spinkit_height">100dp</dimen>
+    <dimen name="bg_focus_size">80dp</dimen>
+
+    <dimen name="swipe_menu_width">240dp</dimen>
+    <dimen name="view_flipper_height">400dp</dimen>
+
 
 
 </resources>

@@ -5,6 +5,7 @@
     <color name="colorAccent">#027CDA</color>
     <color name="colorStartGradientBlueStart">#027CDA</color>
     <color name="colorStartGradientBlueEnd">#136EAF</color>
+    <color name="colorBackgroudFocus">#DDDDDD</color>
 
     <color name="color_app_background">#81B3CC</color>
 

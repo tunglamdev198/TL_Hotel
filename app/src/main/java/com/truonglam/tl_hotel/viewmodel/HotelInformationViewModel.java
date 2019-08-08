@@ -8,36 +8,43 @@ import android.support.annotation.NonNull;
 
 import com.truonglam.tl_hotel.model.HotelInformation;
 import com.truonglam.tl_hotel.webservice.Client;
+import com.truonglam.tl_hotel.webservice.reponsitories.HotelInformationRepository;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HotelInformationViewModel extends AndroidViewModel {
-    private MutableLiveData<HotelInformation> mHotelInformationLiveData;
+    private MutableLiveData<HotelInformation> mLiveData;
 
     public HotelInformationViewModel(@NonNull Application application) {
         super(application);
-        mHotelInformationLiveData = new MutableLiveData<>();
+        mLiveData = new MutableLiveData<>();
     }
+
+//    public void init(String username, String password){
+//        repository = HotelInformationRepository.getInstance();
+//        mLiveData = repository.getHotelInformations(username,password);
+//    }
 
     public MutableLiveData<HotelInformation> getHotelInformation(String username, String password) {
         Client.getService().getInformation(username, password).enqueue(new Callback<HotelInformation>() {
             @Override
             public void onResponse(Call<HotelInformation> call, Response<HotelInformation> response) {
-                HotelInformation hotelInformation = response.body();
-                mHotelInformationLiveData.setValue(hotelInformation);
+                if (response.isSuccessful()) {
+                    mLiveData.setValue(response.body());
+                }
+                else {
+                    mLiveData.setValue(null);
+                }
             }
 
             @Override
             public void onFailure(Call<HotelInformation> call, Throwable t) {
-
+                mLiveData.setValue(null);
             }
         });
-        return mHotelInformationLiveData;
+        return mLiveData;
     }
 
-    public void setHotelInformation(HotelInformation hotelInformation) {
-        mHotelInformationLiveData.setValue(hotelInformation);
-    }
 }

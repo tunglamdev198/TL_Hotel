@@ -12,18 +12,26 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.ybq.android.spinkit.sprite.Sprite;
@@ -36,9 +44,11 @@ import com.truonglam.tl_hotel.model.ClusterRoomUpdating;
 import com.truonglam.tl_hotel.model.HotelInformation;
 import com.truonglam.tl_hotel.model.Room;
 import com.truonglam.tl_hotel.model.RoomCluster;
-import com.truonglam.tl_hotel.utils.TLProgressDialog;
+import com.truonglam.tl_hotel.ui.widgets.IconTextView;
+import com.truonglam.tl_hotel.utils.ProgressDialogUtil;
 import com.truonglam.tl_hotel.viewmodel.RoomClusterViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -47,16 +57,15 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RoomsFragment extends Fragment implements View.OnClickListener, AddEditRoomClusterFragment.ClusterRoomDialogListener
+public class RoomsFragment extends Fragment implements View.OnClickListener,
+        AddEditRoomClusterFragment.ClusterRoomDialogListener
+        , ClusterRoomAdapter.OnItemClickListener
         , SwipeRefreshLayout.OnRefreshListener {
 
     public static final String TAG = "RoomsFragment";
 
     @BindView(R.id.rv_list_room_cluster)
     RecyclerView rvRoomCluster;
-
-    @BindView(R.id.btnBack)
-    ImageView btnBack;
 
     @BindView(R.id.spinkit_loading)
     ProgressBar spinkitLoading;
@@ -70,6 +79,21 @@ public class RoomsFragment extends Fragment implements View.OnClickListener, Add
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout refreshLayout;
 
+    @BindView(R.id.search_view)
+    CardView searchView;
+
+    @BindView(R.id.btn_hide)
+    ImageView btnHide;
+
+    @BindView(R.id.btn_search)
+    IconTextView btnSearch;
+
+    @BindView(R.id.edt_search)
+    EditText edtSearch;
+
+    @BindView(R.id.tb_rooms)
+    Toolbar tbRooms;
+
     private ClusterRoomAdapter adapter;
 
     private HotelInformation hotelInformation;
@@ -80,7 +104,9 @@ public class RoomsFragment extends Fragment implements View.OnClickListener, Add
 
     private int index;
 
-    private TLProgressDialog dialog;
+    private String token;
+
+    private ProgressDialogUtil dialog;
 
     public RoomsFragment() {
     }
@@ -107,15 +133,16 @@ public class RoomsFragment extends Fragment implements View.OnClickListener, Add
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         mViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(TLApp.getInstance())
                 .create(RoomClusterViewModel.class);
-        dialog = new TLProgressDialog(getActivity());
         configRecyclerView();
         registerListener();
+        search();
     }
 
     private void registerListener() {
-        btnBack.setOnClickListener(this);
         btnAdd.setOnClickListener(this);
         refreshLayout.setOnRefreshListener(this);
+        btnHide.setOnClickListener(this);
+        btnSearch.setOnClickListener(this);
     }
 
 
@@ -124,22 +151,38 @@ public class RoomsFragment extends Fragment implements View.OnClickListener, Add
         hotelInformation =
                 (HotelInformation) getArguments().getSerializable(Key.KEY_HOTEL_INFORMATION);
 
-        final String token = hotelInformation.getAccessToken();
+        token = hotelInformation.getAccessToken();
 
-        mViewModel.getRoomCLusterLiveData(token, hotelInformation.getHotelId())
+        // mViewModel.init(token,hotelInformation.getHotelId());
+
+        mViewModel.getRoomClusters(getActivity(), token, hotelInformation.getHotelId())
                 .observe(getActivity(), new Observer<List<RoomCluster>>() {
                     @SuppressLint("RestrictedApi")
                     @Override
                     public void onChanged(@Nullable List<RoomCluster> roomClusters) {
-                        if (roomClusters.isEmpty()) {
+                        if (roomClusters == null) {
                             txtStatus.setVisibility(View.VISIBLE);
+                            return;
                         }
                         roomClusterList = roomClusters;
                         adapter = new ClusterRoomAdapter(roomClusterList, getActivity());
                         rvRoomCluster.setAdapter(adapter);
+                        DividerItemDecoration dividerHorizontal =
+                                new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
+                        dividerHorizontal.
+                                setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.devider_recyclerview));
+                        rvRoomCluster.addItemDecoration(dividerHorizontal);
                         spinkitLoading.setVisibility(View.GONE);
                         btnAdd.setVisibility(View.VISIBLE);
-                        showOption();
+                        adapter.setOnItemClickListener(RoomsFragment.this);
+                        adapter.setOnLongItemClickListener(new ClusterRoomAdapter.OnLongItemClickListener() {
+                            @Override
+                            public void onLongItemClicked(int position, View view) {
+                                index = position;
+                            }
+                        });
+                        registerForContextMenu(rvRoomCluster);
+                        // showOption();
                     }
                 });
 
@@ -160,9 +203,6 @@ public class RoomsFragment extends Fragment implements View.OnClickListener, Add
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnBack:
-                getActivity().getSupportFragmentManager().popBackStack();
-                break;
 
             case R.id.btn_add:
                 AddEditRoomClusterFragment fragment = AddEditRoomClusterFragment
@@ -171,62 +211,19 @@ public class RoomsFragment extends Fragment implements View.OnClickListener, Add
                 fragment.setListener(this);
                 break;
 
+            case R.id.btn_search:
+                searchView.setVisibility(View.VISIBLE);
+                tbRooms.setVisibility(View.GONE);
+                break;
+
+            case R.id.btn_hide:
+                searchView.setVisibility(View.GONE);
+                tbRooms.setVisibility(View.VISIBLE);
+                break;
+
             default:
                 break;
         }
-    }
-
-
-    private void showOption() {
-        adapter.setOnItemClickListener(new ClusterRoomAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClicked(final int position, View view) {
-                index = position;
-                PopupMenu menu = new PopupMenu(getActivity(), view);
-                MenuInflater inflater = menu.getMenuInflater();
-                inflater.inflate(R.menu.menu_cluster_room, menu.getMenu());
-                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        RoomCluster roomCluster = roomClusterList.get(position);
-
-                        switch (item.getItemId()) {
-                            case R.id.mnu_view:
-                                openListRoomFragment(roomCluster
-                                        , hotelInformation.getAccessToken()
-                                        , hotelInformation);
-                                break;
-
-                            case R.id.mnu_edit:
-                                openEditDialog(roomCluster.getName());
-                                break;
-
-                            case R.id.mnu_delete:
-                                Log.d(TAG, roomCluster.toString());
-                                if (roomCluster.getCheck().equals("1")) {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                    builder.setMessage(R.string.msg_hotel_delete_confirm)
-                                            .setCancelable(false)
-                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.dismiss();
-                                                }
-                                            });
-                                    AlertDialog dialog = builder.create();
-                                    dialog.show();
-                                } else {
-                                    showDialog(roomCluster.getId(), roomCluster.getName());
-                                }
-                                break;
-                        }
-                        return true;
-                    }
-                });
-                menu.show();
-            }
-        });
-
     }
 
     private void openListRoomFragment(RoomCluster roomCluster,
@@ -242,18 +239,19 @@ public class RoomsFragment extends Fragment implements View.OnClickListener, Add
     }
 
     public void addClusterRoom(HotelInformation hotelInfo, String clusterName) {
-        RoomCluster roomCluster = new RoomCluster(hotelInfo.getHotelId(), clusterName, "1");
-        mViewModel.addRoomCluster(hotelInfo.getAccessToken(), roomCluster);
-
+        RoomCluster roomCluster = new RoomCluster(hotelInfo.getHotelId(), clusterName, "0");
+        mViewModel.addRoomCluster(getActivity(), hotelInfo.getAccessToken(), roomCluster);
+        updateData();
     }
 
     public void deleteClusterRoom(HotelInformation hotelInfo, String id) {
-        mViewModel.deleteRoomCluster(hotelInfo.getAccessToken(), id);
-
+        mViewModel.deleteRoomCluster(getActivity(), hotelInfo.getAccessToken(), id);
+        updateData();
     }
 
     public void editClusterRoom(HotelInformation hotelInfo, ClusterRoomUpdating updating) {
-        mViewModel.editRoomCluster(hotelInfo.getAccessToken(), updating);
+        mViewModel.updateRoomCluster(getActivity(), hotelInfo.getAccessToken(), updating);
+        updateData();
     }
 
     private void openEditDialog(String clusterRoomName) {
@@ -263,50 +261,83 @@ public class RoomsFragment extends Fragment implements View.OnClickListener, Add
         fragment.setListener(RoomsFragment.this);
     }
 
+    private void deleteRoomClusterDialog(RoomCluster roomCluster) {
+        if (roomCluster.getCheck().equals("1")) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(R.string.msg_hotel_delete_confirm)
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        } else {
+            showDialog(roomCluster.getId(), roomCluster.getName());
+        }
+    }
+
     private void updateData() {
-        mViewModel.getRoomCLusterLiveData(hotelInformation.getAccessToken(), hotelInformation.getHotelId())
+        mViewModel.getRoomClusters(getActivity(), token, hotelInformation.getHotelId())
                 .observe(getActivity(), new Observer<List<RoomCluster>>() {
                     @Override
                     public void onChanged(@Nullable List<RoomCluster> roomClusters) {
-                        adapter.notifyDataSetChanged();
+                        loadProgressBar();
+                        adapter.updateData(roomClusters);
+                        spinkitLoading.setVisibility(View.GONE);
                     }
                 });
     }
 
-    private void loadDialog(String message) {
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(message);
-        progressDialog.setProgress(0);
-        progressDialog.show();
-        new Thread(new Runnable() {
+    private void search() {
+        edtSearch.addTextChangedListener(new TextWatcher() {
             @Override
-            public void run() {
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                progressDialog.dismiss();
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
 
-        }).start();
-        updateData();
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.equals("")) {
+                    return;
+                }
+                List<RoomCluster> filter = searchRoomByKey(s.toString());
+                adapter.updateData(filter);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
+
+    private List<RoomCluster> searchRoomByKey(String key) {
+        List<RoomCluster> result = new ArrayList<>();
+        for (RoomCluster room : roomClusterList) {
+            if (room.getName().toLowerCase().contains(key.toLowerCase())) {
+                result.add(room);
+            }
+        }
+        return result;
+    }
+
 
     private void showDialog(final String id, String clusterRoomName) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setCancelable(false)
                 .setMessage("Bạn có chắc chắn muốn xóa cụm phòng " + clusterRoomName + " không?")
                 .setTitle("Xóa")
-                .setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.option_done, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         deleteClusterRoom(hotelInformation, id);
                         dialog.dismiss();
-                        loadDialog("Đang xóa Cụm phòng...");
                     }
                 })
-                .setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.option_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -321,15 +352,12 @@ public class RoomsFragment extends Fragment implements View.OnClickListener, Add
         switch (mode) {
             case Key.MODE_ADD_CLUSTER_ROOM:
                 addClusterRoom(hotelInformation, clusterName);
-                loadDialog("Đang thêm mới...");
                 break;
 
             case Key.MODE_EDIT_CLUSTER_ROOM:
                 String id = roomClusterList.get(index).getId();
                 ClusterRoomUpdating updating = new ClusterRoomUpdating(id, clusterName);
                 editClusterRoom(hotelInformation, updating);
-                loadDialog("Đang sửa...");
-                updateData();
                 break;
 
 
@@ -337,25 +365,60 @@ public class RoomsFragment extends Fragment implements View.OnClickListener, Add
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        getActivity().getMenuInflater().inflate(R.menu.menu_cluster_room, menu);
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
 
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        RoomCluster roomCluster = roomClusterList.get(index);
+        switch (item.getItemId()) {
+            case R.id.mnu_view:
+                openListRoomFragment(roomCluster
+                        , hotelInformation.getAccessToken()
+                        , hotelInformation);
+                break;
+
+            case R.id.mnu_edit:
+                openEditDialog(roomCluster.getName());
+                break;
+
+            case R.id.mnu_delete:
+                Log.d(TAG, roomCluster.toString());
+                deleteRoomClusterDialog(roomCluster);
+                break;
+        }
+        return super.onContextItemSelected(item);
     }
 
     @Override
     public void onRefresh() {
         refreshLayout.setRefreshing(true);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+        ProgressDialogUtil.showDialog(getActivity(), "Đang tải");
         updateData();
         refreshLayout.setRefreshing(false);
+        ProgressDialogUtil.closeDialog();
+    }
+
+    @Override
+    public void onItemClicked(int position, View view) {
+        index = position;
+        RoomCluster roomCluster = roomClusterList.get(position);
+        switch (view.getId()) {
+            case R.id.ll_content:
+                openListRoomFragment(roomCluster
+                        , hotelInformation.getAccessToken()
+                        , hotelInformation);
+                break;
+
+            case R.id.btn_edit:
+                openEditDialog(roomCluster.getName());
+                break;
+
+            case R.id.btn_delete:
+                deleteRoomClusterDialog(roomCluster);
+                break;
+        }
     }
 }

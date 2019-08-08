@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatDialogFragment;
@@ -42,6 +43,7 @@ public class AddEditRoomClusterFragment extends AppCompatDialogFragment {
     }
 
     @Override
+    @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         mode = getArguments().getString(Key.KEY_MODE);
         String clusterName = getArguments().getString(Key.KEY_ROOM_CLUSTER_NAME);
@@ -57,13 +59,13 @@ public class AddEditRoomClusterFragment extends AppCompatDialogFragment {
         builder.setView(view)
                 .setTitle(mode)
                 .setCancelable(false)
-                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.option_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 })
-                .setPositiveButton("Xong", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.option_done, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String clusterName = edtClusterName.getText().toString().trim();

@@ -1,6 +1,5 @@
 package com.truonglam.tl_hotel.adapter;
 
-import android.arch.lifecycle.ViewModelProvider;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
@@ -8,12 +7,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daimajia.swipe.SwipeLayout;
 import com.truonglam.tl_hotel.R;
-import com.truonglam.tl_hotel.TLApp;
 import com.truonglam.tl_hotel.model.RoomCluster;
-import com.truonglam.tl_hotel.viewmodel.RoomClusterViewModel;
 
 import java.util.List;
 
@@ -25,20 +24,14 @@ public class ClusterRoomAdapter extends RecyclerView.Adapter<ClusterRoomAdapter.
     private LayoutInflater inflater;
     private Context context;
     private OnItemClickListener onItemClickListener;
+    private OnLongItemClickListener onLongItemClickListener;
 
     private int index;
-
-    private RoomClusterViewModel mViewModel;
 
     public ClusterRoomAdapter(List<RoomCluster> roomClusters, Context context) {
         this.roomClusters = roomClusters;
         this.context = context;
         inflater = LayoutInflater.from(context);
-
-        mViewModel = ViewModelProvider.AndroidViewModelFactory
-                .getInstance(TLApp.getInstance())
-                .create(RoomClusterViewModel.class);
-        mViewModel.setRoomCLusterLiveData(roomClusters);
 
     }
 
@@ -54,10 +47,37 @@ public class ClusterRoomAdapter extends RecyclerView.Adapter<ClusterRoomAdapter.
         RoomCluster roomCluster = roomClusters.get(position);
         holder.txtClusterRoomName.setText(roomCluster.getName());
         index = holder.getAdapterPosition();
-        holder.cvClusterRoom.setOnClickListener(new View.OnClickListener() {
+        holder.swipeMenu.setShowMode(SwipeLayout.ShowMode.PullOut);
+        holder.swipeMenu.addDrag(SwipeLayout.DragEdge.Right, holder.swipeMenu.findViewById(R.id.swipe_rtl));
+
+        holder.llContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onItemClickListener.onItemClicked(holder.getAdapterPosition(), v);
+                onItemClickListener.onItemClicked(holder.getAdapterPosition(), holder.llContent);
+            }
+        });
+
+        holder.btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClickListener.onItemClicked(holder.getAdapterPosition(), holder.btnEdit);
+                holder.swipeMenu.close();
+            }
+        });
+
+        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClickListener.onItemClicked(holder.getAdapterPosition(), holder.btnDelete);
+                holder.swipeMenu.close();
+            }
+        });
+
+        holder.llContent.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                onLongItemClickListener.onLongItemClicked(holder.getAdapterPosition(), v);
+                return false;
             }
         });
     }
@@ -72,17 +92,35 @@ public class ClusterRoomAdapter extends RecyclerView.Adapter<ClusterRoomAdapter.
         this.onItemClickListener = onItemClickListener;
     }
 
+    public void setOnLongItemClickListener(OnLongItemClickListener onLongItemClickListener) {
+        this.onLongItemClickListener = onLongItemClickListener;
+    }
+
     public void setRoomClusters(List<RoomCluster> roomClusters) {
         this.roomClusters = roomClusters;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public void updateData(List<RoomCluster> listRoomCluster) {
+        setRoomClusters(listRoomCluster);
+        notifyDataSetChanged();
+    }
 
-        @BindView(R.id.cv_cluster_room)
-        CardView cvClusterRoom;
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.txt_cluster_room_name)
         TextView txtClusterRoomName;
+
+        @BindView(R.id.swipe_menu)
+        SwipeLayout swipeMenu;
+
+        @BindView(R.id.btn_edit)
+        LinearLayout btnEdit;
+
+        @BindView(R.id.btn_delete)
+        LinearLayout btnDelete;
+
+        @BindView(R.id.ll_content)
+        LinearLayout llContent;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -93,5 +131,9 @@ public class ClusterRoomAdapter extends RecyclerView.Adapter<ClusterRoomAdapter.
 
     public interface OnItemClickListener {
         void onItemClicked(int position, View view);
+    }
+
+    public interface OnLongItemClickListener {
+        void onLongItemClicked(int position, View view);
     }
 }

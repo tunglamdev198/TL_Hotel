@@ -3,7 +3,6 @@ package com.truonglam.tl_hotel.ui.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.content.DialogInterface;
@@ -11,30 +10,44 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.truonglam.tl_hotel.R;
+import com.truonglam.tl_hotel.TLApp;
+import com.truonglam.tl_hotel.adapter.HotelServiceAdapter;
 import com.truonglam.tl_hotel.adapter.ListRoomAdapter;
 import com.truonglam.tl_hotel.common.Key;
+import com.truonglam.tl_hotel.model.Box;
 import com.truonglam.tl_hotel.model.HotelInformation;
 import com.truonglam.tl_hotel.model.Room;
 import com.truonglam.tl_hotel.model.RoomCluster;
 import com.truonglam.tl_hotel.model.RoomUpdating;
-import com.truonglam.tl_hotel.utils.TLProgressDialog;
+import com.truonglam.tl_hotel.ui.activities.HomePageActivity;
+import com.truonglam.tl_hotel.ui.widgets.IconTextView;
+import com.truonglam.tl_hotel.utils.ProgressDialogUtil;
 import com.truonglam.tl_hotel.viewmodel.RoomViewModel;
 import com.truonglam.tl_hotel.webservice.Client;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -50,7 +63,6 @@ public class ListRoomFragment extends Fragment implements View.OnClickListener,
         AddEditRoomFragment.RoomDialogListener, ListRoomAdapter.OnItemClickListener,
         SwipeRefreshLayout.OnRefreshListener {
 
-    public static final String TAG = "RoomsFragment";
 
     @BindView(R.id.rv_list_room)
     RecyclerView rvListRoom;
@@ -64,6 +76,9 @@ public class ListRoomFragment extends Fragment implements View.OnClickListener,
     @BindView(R.id.txt_cluster_room_name)
     TextView txtClusterRoomName;
 
+    @BindView(R.id.tb_list_room)
+    Toolbar tbListRoom;
+
     @BindView(R.id.btn_add)
     FloatingActionButton btnAdd;
 
@@ -73,11 +88,29 @@ public class ListRoomFragment extends Fragment implements View.OnClickListener,
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout refreshLayout;
 
+    @BindView(R.id.search_view)
+    CardView searchView;
+
+    @BindView(R.id.btn_hide)
+    ImageView btnHide;
+
+    @BindView(R.id.btn_search)
+    IconTextView btnSearch;
+
+    @BindView(R.id.edt_search)
+    EditText edtSearch;
+
+    private boolean check = true;
+
+    private DividerItemDecoration dividerHorizontal;
+
     private RoomCluster roomCluster;
 
     private HotelInformation information;
 
     private String token;
+
+    private String id;
 
     private ListRoomAdapter adapter;
 
@@ -86,9 +119,6 @@ public class ListRoomFragment extends Fragment implements View.OnClickListener,
     private RoomViewModel roomViewModel;
 
     private int index;
-
-    private TLProgressDialog dialog;
-
 
     public ListRoomFragment() {
     }
@@ -115,66 +145,81 @@ public class ListRoomFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        HomePageActivity.getInstance().currentFragment = this;
         initViews();
         registerListener();
         configRecyclerView();
+        search();
     }
 
     private void initViews() {
-        dialog = new TLProgressDialog(getActivity());
         roomCluster = (RoomCluster) getArguments().getSerializable(Key.KEY_ROOM_CLUSTER);
         information = (HotelInformation) getArguments().getSerializable(Key.KEY_HOTEL_INFORMATION);
         token = getArguments().getString(Key.KEY_TOKEN);
+        id = roomCluster.getId();
         txtClusterRoomName.setText(roomCluster.getName());
-        roomViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication())
+        roomViewModel = ViewModelProvider.AndroidViewModelFactory
+                .getInstance(TLApp.getInstance())
                 .create(RoomViewModel.class);
     }
 
     private void registerListener() {
         btnBack.setOnClickListener(this);
         btnAdd.setOnClickListener(this);
+        btnHide.setOnClickListener(this);
+        btnSearch.setOnClickListener(this);
         refreshLayout.setOnRefreshListener(this);
     }
 
     private void configRecyclerView() {
         spinkitLoading.setVisibility(View.VISIBLE);
-        String id = roomCluster.getId();
-        roomViewModel.getRoomLiveData(token, id).observe(getActivity(), new Observer<List<Room>>() {
+        roomViewModel.getListRoom(getActivity(), token, id).observe(getActivity(), new Observer<List<Room>>() {
             @SuppressLint("RestrictedApi")
             @Override
             public void onChanged(@Nullable List<Room> rooms) {
                 listRoom = rooms;
-                if (rooms.isEmpty()) {
+                if (rooms == null) {
                     txtStatus.setVisibility(View.VISIBLE);
+                    spinkitLoading.setVisibility(View.GONE);
+                    return;
                 }
                 adapter = new ListRoomAdapter(listRoom, getActivity());
+                dividerHorizontal =
+                        new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
+                dividerHorizontal.setDrawable(ContextCompat.getDrawable(getActivity(),
+                        R.drawable.devider_recyclerview));
+                rvListRoom.addItemDecoration(dividerHorizontal);
                 rvListRoom.setAdapter(adapter);
                 spinkitLoading.setVisibility(View.GONE);
                 btnAdd.setVisibility(View.VISIBLE);
-                adapter.setOnItemClickListener(ListRoomFragment.this);
+                if (check == true) {
+                    adapter.setOnItemClickListener(ListRoomFragment.this);
+                } else return;
+                check = false;
+                adapter.setOnLongItemClickListener(new ListRoomAdapter.OnLongItemClickListener() {
+                    @Override
+                    public void onLongItemClicked(int position) {
+                        index = position;
+                    }
+                });
+                registerForContextMenu(rvListRoom);
             }
         });
     }
 
     private void addRoom(String roomName) {
         Room room = new Room(information.getHotelId(), roomName, roomCluster.getId());
-        roomViewModel.addRoom(token, room);
+        roomViewModel.addRoom(getActivity(), token, room);
+        updateData();
     }
 
     private void updateData() {
         spinkitLoading.setVisibility(View.VISIBLE);
-
-        roomViewModel.updateList(token, roomCluster.getId()).observe(getActivity(),
+        roomViewModel.getListRoom(getActivity(), token, id).observe(getActivity(),
                 new Observer<List<Room>>() {
                     @Override
                     public void onChanged(@Nullable List<Room> rooms) {
-                        if (rooms.isEmpty()) {
-                            txtStatus.setVisibility(View.VISIBLE);
-                        } else {
-                            txtStatus.setVisibility(View.GONE);
-                        }
-
-                        adapter.notifyDataSetChanged();
+                        adapter.updateData(rooms);
                         spinkitLoading.setVisibility(View.GONE);
                     }
                 });
@@ -187,48 +232,6 @@ public class ListRoomFragment extends Fragment implements View.OnClickListener,
         addEditRoomFragment.setListener(ListRoomFragment.this);
     }
 
-    private void showPopupMenu() {
-        adapter.setOnItemClickListener(new ListRoomAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClicked(final int position, View view) {
-                final Room room = listRoom.get(position);
-                PopupMenu menu = new PopupMenu(getActivity(), view);
-                MenuInflater inflater = menu.getMenuInflater();
-                inflater.inflate(R.menu.menu_edit_delete_room, menu.getMenu());
-                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.mnu_edit:
-                                openEditDialog(room);
-                                break;
-
-                            case R.id.mnu_delete:
-                                showDialog(room.getId(), room.getName());
-                                break;
-                        }
-                        return true;
-                    }
-                });
-                menu.show();
-            }
-        });
-    }
-
-    private void deleteRoom(String id) {
-        Client.getService().deleteRoom(token, id).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-
-            }
-        });
-    }
-
     private void showDialog(final String id, String roomName) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setCancelable(false)
@@ -237,9 +240,10 @@ public class ListRoomFragment extends Fragment implements View.OnClickListener,
                 .setPositiveButton("Có", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        deleteRoom(id);
+
+                        roomViewModel.deleteRoom(getActivity(), token, id);
+                        updateData();
                         dialog.dismiss();
-                        loadDialog("Đang xóa phòng...");
                     }
                 })
                 .setNegativeButton("Không", new DialogInterface.OnClickListener() {
@@ -250,6 +254,26 @@ public class ListRoomFragment extends Fragment implements View.OnClickListener,
                 });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        getActivity().getMenuInflater().inflate(R.menu.menu_edit_delete_room, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        Room room = listRoom.get(index);
+        switch (item.getItemId()) {
+            case R.id.mnu_edit:
+                openEditDialog(room);
+                break;
+
+            case R.id.mnu_delete:
+                showDialog(room.getId(), room.getName());
+                break;
+        }
+        return super.onContextItemSelected(item);
     }
 
     @Override
@@ -264,6 +288,16 @@ public class ListRoomFragment extends Fragment implements View.OnClickListener,
                 fragment.show(getFragmentManager(), "AddEditRoomFragment");
                 fragment.setListener(this);
                 break;
+
+            case R.id.btn_search:
+                searchView.setVisibility(View.VISIBLE);
+                tbListRoom.setVisibility(View.GONE);
+                break;
+
+            case R.id.btn_hide:
+                searchView.setVisibility(View.GONE);
+                tbListRoom.setVisibility(View.VISIBLE);
+                break;
         }
     }
 
@@ -274,15 +308,18 @@ public class ListRoomFragment extends Fragment implements View.OnClickListener,
             case Key.MODE_ADD_ROOM:
                 addRoom(roomName);
                 txtStatus.setVisibility(View.GONE);
-                loadDialog("Đang thêm phòng...");
                 break;
 
             case Key.MODE_EDIT_ROOM:
                 RoomUpdating roomUpdating = new RoomUpdating(listRoom.get(index).getId(), roomName);
+                ProgressDialogUtil.showDialog(getActivity(), "Đang sửa");
                 Client.getService().updateRoom(token, roomUpdating).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
-
+                        if (response.isSuccessful()) {
+                            updateData();
+                            ProgressDialogUtil.closeDialog();
+                        }
                     }
 
                     @Override
@@ -290,38 +327,104 @@ public class ListRoomFragment extends Fragment implements View.OnClickListener,
 
                     }
                 });
-                loadDialog("Đang chỉnh sửa...");
                 break;
         }
     }
 
-    private void loadDialog(String message) {
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(message);
-        progressDialog.setProgress(0);
-        progressDialog.show();
-        new Thread(new Runnable() {
+    private void search() {
+        edtSearch.addTextChangedListener(new TextWatcher() {
             @Override
-            public void run() {
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                progressDialog.dismiss();
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
 
-        }).start();
-        updateData();
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.equals("")) {
+                    return;
+                }
+                List<Room> filter = searchRoomByKey(s.toString());
+                adapter.updateData(filter);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
+    private List<Room> searchRoomByKey(String key) {
+        List<Room> result = new ArrayList<>();
+        for (Room room : listRoom) {
+            if (room.getName().toLowerCase().contains(key.toLowerCase())) {
+                result.add(room);
+            }
+        }
+        return result;
+    }
+
+    private void displayListBox(List<Box> boxes) {
+        String message = "";
+        if (boxes.size() == 0) {
+            message = "Hiện tại không có Box nào";
+        }
+
+        for (Box box : boxes) {
+            String mac = "MAC : " + box.getMac();
+            String serial = "Serial : " + box.getSerial();
+            message += mac + "\n" + serial + "\n\n";
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Thông tin Box")
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("Thoát", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     @Override
     public void onItemClicked(int position, View view) {
         index = position;
+        Room room = listRoom.get(position);
+
         switch (view.getId()) {
-            case R.id.img_menu:
-                showPopupMenu();
+            case R.id.ll_content:
+                ProgressDialogUtil.showDialog(getActivity(),"Đang tải");
+                Client.getService().getBoxByRoomId(token, room.getId()).enqueue(new Callback<List<Box>>() {
+                    @Override
+                    public void onResponse(Call<List<Box>> call, Response<List<Box>> response) {
+                        if (response.isSuccessful()) {
+                            displayListBox(response.body());
+                            ProgressDialogUtil.closeDialog();
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Box>> call, Throwable t) {
+                        ProgressDialogUtil.closeDialog();
+                    }
+                });
+
                 break;
+
+            case R.id.btn_edit:
+                openEditDialog(room);
+                break;
+
+            case R.id.btn_delete:
+                showDialog(room.getId(), room.getName());
+                break;
+
         }
     }
 

@@ -23,10 +23,6 @@
         android:id="@+id/mnu_rooms"
         android:title="@string/hotel_room_manager" />
 
-        <item
-        android:icon="@drawable/ic_box"
-        android:id="@+id/mnu_box_management"
-        android:title="@string/hotel_box_management" />
     </group>
 
     <group android:id="@+id/group_app">

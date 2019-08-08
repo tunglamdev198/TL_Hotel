@@ -3,21 +3,19 @@ package com.truonglam.tl_hotel.utils;
 import android.app.ProgressDialog;
 import android.content.Context;
 
-public class TLProgressDialog {
+public class ProgressDialogUtil {
 
-    private ProgressDialog dialog;
+    private static ProgressDialog dialog;
 
 
-    public TLProgressDialog(Context context) {
+    public static void showDialog(Context context, String message) {
         dialog = new ProgressDialog(context);
-    }
-
-    public void showDialog(String message) {
+        dialog.setCancelable(false);
         dialog.setMessage(message);
         dialog.show();
     }
 
-    public void closeDialog() {
+    public static void closeDialog() {
         dialog.dismiss();
     }
 }

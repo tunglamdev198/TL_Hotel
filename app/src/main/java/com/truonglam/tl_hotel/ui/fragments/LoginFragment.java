@@ -1,12 +1,11 @@
 package com.truonglam.tl_hotel.ui.fragments;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,20 +14,20 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.truonglam.tl_hotel.R;
-import com.truonglam.tl_hotel.TLApp;
-import com.truonglam.tl_hotel.common.Time;
 import com.truonglam.tl_hotel.handler.MyHandler;
 import com.truonglam.tl_hotel.model.HotelInformation;
+import com.truonglam.tl_hotel.ui.activities.HomePageActivity;
 import com.truonglam.tl_hotel.utils.SavingUPSharePref;
-import com.truonglam.tl_hotel.viewmodel.HotelInformationViewModel;
+import com.truonglam.tl_hotel.webservice.Client;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginFragment extends Fragment implements View.OnClickListener {
-
-    public static final String TAG = "LoginFragment";
 
     @BindView(R.id.edtUsername)
     TextInputEditText edtUserName;
@@ -45,7 +44,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private String username;
     private String password;
 
-    private HotelInformationViewModel hotelInfoViewModel;
 
     @Nullable
     @Override
@@ -60,9 +58,15 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        edtPassword.setText("123456");
-        edtUserName.setText("anh");
+        initData();
         registerListener();
+    }
+
+    private void initData() {
+//        hotelInfoViewModel = ViewModelProvider.AndroidViewModelFactory
+//                .getInstance(TLApp.getInstance())
+//                .create(HotelInformationViewModel.class);
+//        // hotelInfoViewModel.init(username, password);
     }
 
     private void registerListener() {
@@ -72,20 +76,19 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private void validateLogin() {
         username = edtUserName.getText().toString().trim();
         password = edtPassword.getText().toString().trim();
-
         if (username.isEmpty() && password.isEmpty()) {
-            Toasty.error(getActivity(), "Vui lòng nhập đủ thông tin",
+            Toasty.error(getActivity(), R.string.msg_validate_information,
                     Toast.LENGTH_SHORT, false).show();
             return;
         } else {
             if (username.isEmpty()) {
-                Toasty.error(getActivity(), "Vui lòng nhập tên tài khoản",
+                Toasty.error(getActivity(), R.string.msg_validate_username,
                         Toast.LENGTH_SHORT, false).show();
                 return;
             }
 
             if (password.isEmpty()) {
-                Toasty.error(getActivity(), "Vui lòng nhập mật khẩu",
+                Toasty.error(getActivity(), R.string.msg_validate_password,
                         Toast.LENGTH_SHORT, false).show();
                 return;
             }
@@ -95,29 +98,36 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private void doLogin() {
         loadProgressBar();
-        hotelInfoViewModel = ViewModelProvider.AndroidViewModelFactory
-                .getInstance(TLApp.getInstance())
-                .create(HotelInformationViewModel.class);
-
-        hotelInfoViewModel.getHotelInformation(username, password)
-                .observe(getActivity(), new Observer<HotelInformation>() {
+        Client.getService().getInformation(username, password).enqueue(new Callback<HotelInformation>() {
             @Override
-            public void onChanged(@Nullable HotelInformation hotelInformation) {
-                if (hotelInformation == null) {
-                    stopProgressBar();
-                    Toast.makeText(getActivity(), "Tài khoản hoặc mật khẩu không đúng",
-                            Toast.LENGTH_SHORT).show();
-                    return;
+            public void onResponse(Call<HotelInformation> call, Response<HotelInformation> response) {
+                if (response.isSuccessful()) {
+                    HotelInformation hotelInformation = response.body();
+                    Log.d("A", "onResponse: " + hotelInformation.toString());
+                    HomePageActivity.getInstance().setHotelInfo(hotelInformation);
+                    if (hotelInformation.getAccessToken() == null) {
+                        stopProgressBar();
+                        Toasty.error(getActivity(), R.string.msg_validate_info_not_correct,
+                                Toast.LENGTH_SHORT, false).show();
+                        return;
+                    }
+                    HotelInformationFragment fragment = HotelInformationFragment.newInstance(hotelInformation);
+                    SavingUPSharePref.savePassword(password, getActivity());
+                    SavingUPSharePref.saveUsername(username, getActivity());
+                    getActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.container, fragment)
+                            .setCustomAnimations(R.anim.anim_slide_in_left, R.anim.anim_slide_out_left)
+                            .commit();
+                    HomePageActivity.getInstance().bottomNav.setVisibility(View.VISIBLE);
                 }
+            }
 
-                HotelInformationFragment fragment = HotelInformationFragment.newInstance(hotelInformation, username);
-                SavingUPSharePref.savePassword(password,getActivity());
-                SavingUPSharePref.saveUsername(username,getActivity());
-                getActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.container, fragment)
-                        .setCustomAnimations(R.anim.anim_slide_in_left, R.anim.anim_slide_out_left)
-                        .commit();
+            @Override
+            public void onFailure(Call<HotelInformation> call, Throwable t) {
+                Toasty.error(getActivity(), R.string.msg_validate_login_fail,
+                        Toast.LENGTH_SHORT, false).show();
+                stopProgressBar();
             }
         });
     }
@@ -131,7 +141,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             }
         };
 
-        new MyHandler(runnable, Time.SERVER_TIME_OUT).start();
+        new MyHandler(runnable, (long) 2000).start();
     }
 
     private void stopProgressBar() {

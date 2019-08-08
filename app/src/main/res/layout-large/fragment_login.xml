@@ -90,5 +90,4 @@
         android:layout_marginBottom="@dimen/progress_bar_size"
          />
 
-
 </FrameLayout>

@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activities.SplashActivity">
+    android:background="@drawable/background"
+    android:gravity="center"
+    tools:context=".ui.activities.SplashActivity"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="@dimen/image_hottelbox_splash_width"
+        android:layout_height="@dimen/image_hottelbox_splash_height"
+        android:src="@drawable/hotelbox_logo" />
+
+    <com.github.ybq.android.spinkit.SpinKitView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/spin_kit"
+        style="@style/SpinKitView.Large.Wave"
+        android:layout_marginTop="@dimen/margin_bottom_imageview"
+        android:layout_width="@dimen/spinkit_width"
+        android:layout_height="@dimen/spinkit_height"
+        app:SpinKit_Color="@color/colorPrimary" />
 
 </LinearLayout>

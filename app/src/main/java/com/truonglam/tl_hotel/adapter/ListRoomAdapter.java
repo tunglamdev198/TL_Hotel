@@ -8,8 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daimajia.swipe.SwipeLayout;
 import com.truonglam.tl_hotel.R;
 import com.truonglam.tl_hotel.model.Room;
 
@@ -23,6 +25,7 @@ public class ListRoomAdapter extends RecyclerView.Adapter<ListRoomAdapter.ViewHo
     private LayoutInflater inflater;
     private Context context;
     private OnItemClickListener onItemClickListener;
+    private  OnLongItemClickListener onLongItemClickListener;
 
     public ListRoomAdapter(List<Room> rooms, Context context) {
         this.rooms = rooms;
@@ -38,22 +41,50 @@ public class ListRoomAdapter extends RecyclerView.Adapter<ListRoomAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         Room room = rooms.get(position);
         holder.txtRoomName.setText(room.getName());
-        holder.cvRoom.setOnClickListener(new View.OnClickListener() {
+        holder.swipeMenu.setShowMode(SwipeLayout.ShowMode.PullOut);
+        holder.swipeMenu.addDrag(SwipeLayout.DragEdge.Right, holder.swipeMenu.findViewById(R.id.swipe_rtl));
+
+        holder.llContent.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
-                onItemClickListener.onItemClicked(holder.getAdapterPosition(), v);
+            public boolean onLongClick(View v) {
+                onItemClickListener.onItemClicked(position,v);
+                return false;
             }
         });
 
-        holder.imgMenu.setOnClickListener(new View.OnClickListener() {
+        holder.llContent.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                onLongItemClickListener.onLongItemClicked(holder.getAdapterPosition());
+                return false;
+            }
+        });
+
+        holder.llContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onItemClickListener.onItemClicked(holder.getAdapterPosition(),v);
             }
         });
+
+        holder.btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClickListener.onItemClicked(holder.getAdapterPosition(),v);
+            }
+        });
+
+
+        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClickListener.onItemClicked(holder.getAdapterPosition(),v);
+            }
+        });
+
     }
 
     @Override
@@ -61,21 +92,41 @@ public class ListRoomAdapter extends RecyclerView.Adapter<ListRoomAdapter.ViewHo
         return rooms.size();
     }
 
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
+    }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 
+    public void setOnLongItemClickListener(OnLongItemClickListener onLongItemClickListener) {
+        this.onLongItemClickListener = onLongItemClickListener;
+    }
+
+    public void updateData(List<Room> roomList){
+        setRooms(roomList);
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.cv_room)
-        CardView cvRoom;
 
         @BindView(R.id.txt_room_name)
         TextView txtRoomName;
 
-        @BindView(R.id.img_menu)
-        ImageView imgMenu;
+        @BindView(R.id.swipe_menu)
+        SwipeLayout swipeMenu;
+
+        @BindView(R.id.btn_edit)
+        LinearLayout btnEdit;
+
+        @BindView(R.id.btn_delete)
+        LinearLayout btnDelete;
+
+        @BindView(R.id.ll_content)
+        LinearLayout llContent;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -85,5 +136,9 @@ public class ListRoomAdapter extends RecyclerView.Adapter<ListRoomAdapter.ViewHo
 
     public interface OnItemClickListener {
         void onItemClicked(int position, View view);
+    }
+
+    public interface OnLongItemClickListener {
+        void onLongItemClicked(int position);
     }
 }

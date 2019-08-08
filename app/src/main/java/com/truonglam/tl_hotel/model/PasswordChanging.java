@@ -8,10 +8,10 @@ public class PasswordChanging {
     @SerializedName("username")
     private String username;
 
-    @SerializedName("oldPassword")
+    @SerializedName("password")
     private String password;
 
-    @SerializedName("newPassword")
+    @SerializedName("newpassword")
     private String newPassword;
 
     public PasswordChanging() {

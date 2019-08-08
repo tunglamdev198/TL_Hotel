@@ -13,6 +13,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.truonglam.tl_hotel.R;
+import com.truonglam.tl_hotel.common.Key;
+import com.truonglam.tl_hotel.model.HotelInformation;
+import com.truonglam.tl_hotel.model.HotelService;
+import com.truonglam.tl_hotel.webservice.Client;
 
 import java.util.ArrayList;
 
@@ -20,6 +24,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import petrov.kristiyan.colorpicker.ColorPicker;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class EditServiceFragment extends Fragment implements View.OnClickListener {
 
@@ -29,20 +36,36 @@ public class EditServiceFragment extends Fragment implements View.OnClickListene
     @BindView(R.id.edt_link)
     TextInputEditText edtLink;
 
-    @BindView(R.id.btnDone)
+    @BindView(R.id.edt_icon_code)
+    TextInputEditText edtIconCode;
+
+    @BindView(R.id.edt_color_code)
+    TextInputEditText edtColorCode;
+
+    @BindView(R.id.btn_done)
     Button btnDone;
 
-    @BindView(R.id.btnCancel)
+    @BindView(R.id.btn_cancel)
     Button btnCancel;
 
-    @BindView(R.id.btnBack)
+    @BindView(R.id.btn_back)
     ImageView btnBack;
 
-    @BindView(R.id.btn_change_color)
-    Button btnChangeColor;
+    private HotelService service;
+
+    private HotelInformation hotelInformation;
 
 
     public EditServiceFragment() {
+    }
+
+    public static EditServiceFragment newInstance(HotelService hotelService, HotelInformation hotelInformation) {
+        Bundle args = new Bundle();
+        args.putSerializable(Key.KEY_HOTEL_SERVICE, hotelService);
+        args.putSerializable(Key.KEY_HOTEL_INFORMATION, hotelInformation);
+        EditServiceFragment fragment = new EditServiceFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
 
@@ -56,10 +79,19 @@ public class EditServiceFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        initViews();
         registerListener();
     }
 
     private void initViews() {
+        service = (HotelService) getArguments().getSerializable(Key.KEY_HOTEL_SERVICE);
+        hotelInformation = (HotelInformation) getArguments().getSerializable(Key.KEY_HOTEL_INFORMATION);
+        edtTittle.setText(service.getTittle());
+        edtTittle.setSelection(service.getTittle().length());
+        edtColorCode.setText(service.getColorIcon());
+        edtColorCode.setSelection(service.getColorIcon().length());
+        edtIconCode.setText(service.getIcon());
+        edtIconCode.setSelection(service.getIcon().length());
 
     }
 
@@ -67,69 +99,42 @@ public class EditServiceFragment extends Fragment implements View.OnClickListene
         btnDone.setOnClickListener(this);
         btnCancel.setOnClickListener(this);
         btnBack.setOnClickListener(this);
-        btnChangeColor.setOnClickListener(this);
     }
 
-    private void selectColor() {
-        final ColorPicker colorPicker = new ColorPicker(getActivity());
-        final ArrayList<String> colors = new ArrayList<>();
-        colors.add("#CCCCCC");
-        colors.add("#666666");
-        colors.add("#333333");
-        colors.add("#000000");
-        colors.add("#E74C3C");
-        colors.add("#E67E22");
-        colors.add("#F1C40F");
-        colors.add("#2ECC71");
-        colors.add("#1ABC9C");
-        colors.add("#9B59B6");
-        colors.add("#3498DB");
-        colors.add("#ECF0F1");
-        colors.add("#95A5A6");
-        colors.add("#34495E");
-
-        colorPicker
-                .setColumns(5)
-                .setColors(colors)
-                .setOnChooseColorListener(new ColorPicker.OnChooseColorListener() {
-                    @Override
-                    public void onChooseColor(int position, int color) {
-                        btnChangeColor.setBackgroundColor(color);
-                        Log.d("AAA", "onChooseColor: "+colors.get(position));
-                        colorPicker.dismissDialog();
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        colorPicker.dismissDialog();
-                    }
-                })
-
-                .show();
-    }
-
-    private void editFragment() {
+    private void openServiceFragment() {
+        ServiceFragment fragment = ServiceFragment.newInstance(hotelInformation);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .remove(this)
-                .commitAllowingStateLoss();
+                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                .replace(R.id.container, fragment)
+                .commit();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnDone:
-                editFragment();
+            case R.id.btn_done:
+                Client.getService().updateService(hotelInformation.getAccessToken()).enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+
+                    }
+                });
+                openServiceFragment();
                 break;
 
-            case R.id.btnCancel:
+            case R.id.btn_cancel:
+                getActivity().getSupportFragmentManager().popBackStack();
                 break;
 
-            case R.id.btnBack:
+            case R.id.btn_back:
+                openServiceFragment();
                 break;
 
-            case R.id.btn_change_color:
-                selectColor();
-                break;
 
             default:
                 break;

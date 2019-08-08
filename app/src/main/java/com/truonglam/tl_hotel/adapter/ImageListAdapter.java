@@ -67,6 +67,16 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
         this.onItemClickListener = onItemClickListener;
     }
 
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
+
+    public void updateData(List<String> listImage){
+        images.clear();
+        images.addAll(listImage);
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.cvImage)

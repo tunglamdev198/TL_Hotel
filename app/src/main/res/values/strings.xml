@@ -7,15 +7,14 @@
     <string name="hotel_infomation">Thông tin khách sạn</string>
     <string name="hotel_notification">Thông báo</string>
     <string name="hotel_service">Dịch vụ</string>
-    <string name="hotel_room_manager">Quản lí phòng</string>
-    <string name="hotel_box_management">Quản lí Box</string>
+    <string name="hotel_room_manager">Cụm phòng</string>
     <string name="hotel_account_management">Tài khoản</string>
     <string name="hotel_setting">Cài đặt</string>
     <string name="hotel_logout">Đăng xuất</string>
 
     <string name="string_tittle">Tiêu đề</string>
     <string name="string_hotel_name">Tên khách sạn</string>
-    <string name="string_photos">Hình ảnh</string>
+    <string name="string_photos">Ảnh nền</string>
     <string name="string_home_page_tittle">Màn hình chính</string>
 
 
@@ -25,20 +24,64 @@
     <string name="action_view_cluster_room">Xem danh sách phòng</string>
     <string name="action_delete_cluster_room">Xóa cụm phòng</string>
     <string name="action_edit_cluster_room">Sửa cụm phòng</string>
+
     <string name="action_edit_room">Sửa phòng</string>
     <string name="action_delete_room">Xóa phòng</string>
+
+    <string name="action_edit_service">Sửa dịch vụ</string>
+    <string name="action_delete_service">Xóa dịch vụ</string>
 
     <string name="msg_cluster_room_name_validate">Tên cụm phòng không có sự thay đổi</string>
     <string name="msg_room_name_validate">Tên phòng không có sự thay đổi</string>
     <string name="msg_hotel_info_validate">Thông tin đã nhập không có sự thay đổi</string>
+    <string name="msg_relogin">Bạn vừa thay đổi mật khẩu, Vui lòng đăng nhập lại</string>
     <string name="msg_hotel_delete_confirm">Bạn không thể xóa cụm phòng này
                                             Do đang ở trạng thái Mặc định</string>
+
+    <string name="msg_delete_successful">Xóa thành công</string>
+    <string name="msg_delete_error">Xóa không thành công</string>
+    <string name="msg_exit_app">Bạn có muốn thoát ứng dụng không?</string>
+    <string name="msg_logout_account">Bạn có muốn đăng xuất không?</string>
+    <string name="msg_delete_image_confirm">Bạn có muốn xóa ảnh này không?</string>
+    <string name="msg_delete_image">Xóa ảnh</string>
+    <string name="msg_uploading_image">Đang upload</string>
+    <string name="msg_request_permission">Bạn cần cấp quyền để sử dụng</string>
+    <string name="msg_logout">Đăng xuất</string>
+    <string name="msg_loging_out">Đang đăng xuất</string>
+    <string name="msg_adding">Đang thêm</string>
+    <string name="msg_editing">Đang thêm</string>
+    <string name="msg_deleting">Đang xóa</string>
+    <string name="msg_exit">Thoát</string>
+    <string name="msg_yes">Có</string>
+    <string name="msg_no">Không</string>
+    <string name="msg_done">Xong</string>
+
+    <string name="msg_add_successful">Thêm thành công</string>
+    <string name="msg_add_error">Thêm không thành công</string>
+
+
+    <string name="msg_validate_information">Vui lòng nhập đủ thông tin</string>
+    <string name="msg_validate_username">Vui lòng nhập tên tài khoản</string>
+    <string name="msg_validate_password">Vui lòng nhập mật khẩu</string>
+    <string name="msg_validate_info_not_correct">Tài khoản hoặc mật khẩu không đúng</string>
+    <string name="msg_validate_login_fail">Đăng nhập không thành công</string>
+    <string name="msg_validate_confirm_new_password">Vui lòng nhập đúng mật khẩu xác nhận</string>
+    <string name="msg_validate_password_not_change">Mật khẩu không thay đổi</string>
 
     <string name="icon_service">&#xf562;</string>
     <string name="icon_notification">&#xf0f3;</string>
     <string name="icon_cluster_room">&#xf594;</string>
     <string name="icon_room">&#xf015;</string>
     <string name="icon_account">&#xf2f5;</string>
+    <string name="icon_search">&#xf002;</string>
+    <string name="icon_edit">&#xf044;</string>
+    <string name="icon_delete">&#xf2ed;</string>
+    <string name="icon_home">&#xf015;</string>
+
+
+    <string name="status_wifi_enabled">Wifi enabled</string>
+    <string name="status_mobile_enabled">Mobile data enabled</string>
+    <string name="status_not_connect">Not connected to Internet</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

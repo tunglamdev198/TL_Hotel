@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="@dimen/dialog_fragment_height"
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".ui.fragments.EditTittleFragment"

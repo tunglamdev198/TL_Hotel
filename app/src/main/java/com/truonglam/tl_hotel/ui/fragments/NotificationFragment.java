@@ -30,12 +30,14 @@ import com.truonglam.tl_hotel.adapter.ImageListAdapter;
 import com.truonglam.tl_hotel.common.Key;
 import com.truonglam.tl_hotel.model.HotelBackground;
 import com.truonglam.tl_hotel.model.HotelInformation;
+import com.truonglam.tl_hotel.ui.widgets.IconTextView;
 import com.truonglam.tl_hotel.webservice.Client;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,8 +47,6 @@ public class NotificationFragment extends Fragment implements View.OnClickListen
     private static final int REQUEST_CODE_EDIT_TITTLE = 1;
     private static final int REQUEST_CODE_PERMISSIONS = 10;
 
-    private static final String TITLE = "title";
-    private String tittle;
 
     @BindView(R.id.tbNotification)
     Toolbar tbNotification;
@@ -55,10 +55,7 @@ public class NotificationFragment extends Fragment implements View.OnClickListen
     ImageView btnBack;
 
     @BindView(R.id.btnEdit)
-    ImageView btnEdit;
-
-    @BindView(R.id.btnDelete)
-    ImageView btnDelete;
+    IconTextView btnEdit;
 
     @BindView(R.id.btnAddPhoto)
     ImageView btnAddPhoto;
@@ -76,7 +73,7 @@ public class NotificationFragment extends Fragment implements View.OnClickListen
     ImageView btnEditAvatar;
 
     @BindView(R.id.img_avatar)
-    ImageView imgAvatar;
+    CircleImageView imgAvatar;
 
     private ImageListAdapter adapter;
     private List<String> images;
@@ -142,16 +139,12 @@ public class NotificationFragment extends Fragment implements View.OnClickListen
             }
             txtTittle.setText(tittle);
             txtHotelName.setText(hotelName);
-            Picasso.with(getActivity())
-                    .load(Client.BASE_URL + '/' + hotelInfo.getLogo())
-                    .into(imgAvatar);
         }
     }
 
     private void registerListener() {
         btnBack.setOnClickListener(this);
         btnEdit.setOnClickListener(this);
-        btnDelete.setOnClickListener(this);
         btnAddPhoto.setOnClickListener(this);
         btnEditAvatar.setOnClickListener(this);
     }
@@ -255,11 +248,6 @@ public class NotificationFragment extends Fragment implements View.OnClickListen
         }
     }
 
-
-    private void deleteTittle() {
-        txtTittle.setText("");
-    }
-
     private void addPhoto() {
         Toast.makeText(getActivity(), "Đã cấp quyền", Toast.LENGTH_SHORT).show();
     }
@@ -274,10 +262,6 @@ public class NotificationFragment extends Fragment implements View.OnClickListen
 
             case R.id.btnEdit:
                 editTittle();
-                break;
-
-            case R.id.btnDelete:
-                deleteTittle();
                 break;
 
             case R.id.btnAddPhoto:

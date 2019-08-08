@@ -1,112 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:orientation="vertical"
-    tools:context=".ui.fragments.EditTittleFragment">
+    android:layout_height="match_parent">
 
-    <android.support.design.widget.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/edit_text_input_height"
-        android:layout_marginStart="@dimen/margin_start"
-        android:layout_marginTop="@dimen/margin_top"
-        android:layout_marginEnd="@dimen/margin_end"
-        app:hintEnabled="true">
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/edt_tittle"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="@string/string_tittle"
-            android:textSize="@dimen/text_size_edittext" />
-
-    </android.support.design.widget.TextInputLayout>
-    <android.support.design.widget.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/edit_text_input_height"
-        android:layout_marginStart="@dimen/margin_start"
-        android:layout_marginTop="@dimen/margin_top"
-        android:layout_marginEnd="@dimen/margin_end"
-        app:hintEnabled="true">
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/edt_link"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="Link"
-            android:textSize="@dimen/text_size_edittext" />
-
-    </android.support.design.widget.TextInputLayout>
-
-    <LinearLayout
-        android:gravity="center_vertical"
-        android:layout_marginStart="@dimen/margin_start"
-        android:layout_marginEnd="@dimen/margin_end"
-        android:layout_marginTop="@dimen/margin_top"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:text="Chọn màu"
-            android:textSize="@dimen/text_size_edittext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/btn_change_color"
-            android:background="@color/colorPrimary"
-            android:layout_marginTop="@dimen/margin_top"
-            android:layout_marginStart="@dimen/margin_start"
-            android:layout_marginEnd="@dimen/margin_end"
-            android:layout_marginBottom="@dimen/margin_top"
-            android:layout_width="@dimen/icon_menu_size"
-            android:layout_height="@dimen/icon_menu_size" />
-
-    </LinearLayout>
-
-
-
-
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_end"
-        android:layout_marginBottom="@dimen/margin_end"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        tools:context=".ui.fragments.EditTittleFragment">
 
-        <Button
-            android:id="@+id/btnDone"
-            android:layout_width="@dimen/option_button_width"
-            android:layout_height="@dimen/edittext_height"
+        <android.support.design.widget.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_start"
+            android:layout_marginTop="@dimen/margin_top"
             android:layout_marginEnd="@dimen/margin_end"
-            android:background="@drawable/btn_gradient"
-            android:text="@string/option_done"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/text_size_edittext" />
+            app:hintEnabled="true">
 
-        <Button
-            android:textAllCaps="false"
-            android:id="@+id/btnCancel"
-            android:layout_width="@dimen/option_button_width"
-            android:layout_height="@dimen/edittext_height"
-            android:background="@drawable/btn_gradient"
-            android:text="@string/option_cancel"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/text_size_edittext" />
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/edt_tittle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/string_tittle"
+                android:textSize="@dimen/text_size_edittext" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_start"
+            android:layout_marginTop="@dimen/margin_top"
+            android:layout_marginEnd="@dimen/margin_end"
+            app:hintEnabled="true">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/edt_link"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:editable="false"
+                android:hint="Link"
+                android:textSize="@dimen/text_size_edittext" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_start"
+            android:layout_marginTop="@dimen/margin_top"
+            android:layout_marginEnd="@dimen/margin_end"
+            app:hintEnabled="true">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/edt_color_code"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Mã màu"
+                android:textSize="@dimen/text_size_edittext" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_start"
+            android:layout_marginTop="@dimen/margin_top"
+            android:layout_marginEnd="@dimen/margin_end"
+            app:hintEnabled="true">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/edt_icon_code"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Mã icon"
+                android:textSize="@dimen/text_size_edittext" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_end"
+            android:layout_marginBottom="@dimen/margin_end"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_done"
+                android:layout_width="@dimen/option_button_width"
+                android:layout_height="@dimen/edittext_height"
+                android:layout_marginEnd="@dimen/margin_end"
+                android:background="@drawable/btn_gradient"
+                android:foreground="?attr/selectableItemBackground"
+                android:text="@string/option_done"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_edittext" />
+
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="@dimen/option_button_width"
+                android:layout_height="@dimen/edittext_height"
+                android:background="@drawable/btn_gradient"
+                android:foreground="?attr/selectableItemBackground"
+                android:text="@string/option_cancel"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_edittext" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/tbNotification"
@@ -116,20 +128,29 @@
         android:fitsSystemWindows="true"
         app:titleTextColor="@android:color/white">
 
-        <ImageView
-            android:id="@+id/btnBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:foreground="?attr/selectableItemBackground"
-            android:src="@drawable/ic_back" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/toolbar_tittle_margin_start"
-            android:text="@string/hotel_service"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/text_size_edittext" />
+            <ImageView
+                android:id="@+id/btn_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:foreground="?attr/selectableItemBackground"
+                android:src="@drawable/ic_back" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="@dimen/toolbar_tittle_margin_start"
+                android:text="@string/hotel_service"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_edittext" />
+
+        </RelativeLayout>
+
 
     </android.support.v7.widget.Toolbar>
 </FrameLayout>

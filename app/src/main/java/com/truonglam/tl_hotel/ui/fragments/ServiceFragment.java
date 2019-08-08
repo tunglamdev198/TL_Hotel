@@ -6,17 +6,16 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.truonglam.tl_hotel.R;
 import com.truonglam.tl_hotel.adapter.HotelServiceAdapter;
@@ -33,21 +32,23 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ServiceFragment extends Fragment implements View.OnClickListener {
+public class ServiceFragment extends Fragment implements View.OnClickListener
+        , HotelServiceAdapter.OnItemClickListener {
 
-    public static final String TAG = "ServiceFragment";
+    @BindView(R.id.refresh_layout)
+    SwipeRefreshLayout refreshLayout;
 
-    @BindView(R.id.btnBack)
-    ImageView btnBack;
-
-    @BindView(R.id.rvListService)
+    @BindView(R.id.rv_list_service)
     RecyclerView rvListService;
 
-    @BindView(R.id.pbLoading)
+    @BindView(R.id.pb_loading)
     ProgressBar pbLoading;
 
-    @BindView(R.id.fabAddService)
-    FloatingActionButton fabAddService;
+    @BindView(R.id.txt_status)
+    TextView txtStatus;
+
+
+    private List<HotelService> listService;
 
     private HotelInformation hotelInformation;
 
@@ -70,7 +71,7 @@ public class ServiceFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_service, container, false);
         ButterKnife.bind(this, view);
@@ -79,49 +80,31 @@ public class ServiceFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        mViewModel = ViewModelProvider.AndroidViewModelFactory
+                .getInstance(getActivity().getApplication())
+                .create(ServicesViewModel.class);
         configRecyclerView();
         registerListener();
     }
 
     private void registerListener() {
-        btnBack.setOnClickListener(this);
-    }
-
-    private void openEditServiceFragment() {
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, new EditServiceFragment())
-                .addToBackStack(null)
-                .commit();
-    }
-
-    private void showPopupMenu() {
-        adapter.setOnItemClickListener(new HotelServiceAdapter.OnItemClickListener() {
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onItemClicked(int position, View view) {
-                PopupMenu menu = new PopupMenu(getActivity(), view);
-                MenuInflater inflater = menu.getMenuInflater();
-                inflater.inflate(R.menu.menu_edit_delete_room, menu.getMenu());
-                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.mnu_view:
-                                break;
-
-                            case R.id.mnu_edit:
-                                openEditServiceFragment();
-                                break;
-
-                            case R.id.mnu_delete:
-                                break;
-                        }
-                        return true;
-                    }
-                });
-                menu.show();
+            public void onRefresh() {
+                refreshLayout.setRefreshing(true);
+                updateData();
+                refreshLayout.setRefreshing(false);
             }
         });
+    }
 
+    private void openEditServiceFragment(HotelService hotelService) {
+        EditServiceFragment fragment = EditServiceFragment.newInstance(hotelService, hotelInformation);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, fragment)
+                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                .addToBackStack(null)
+                .commit();
     }
 
     private void configRecyclerView() {
@@ -131,33 +114,77 @@ public class ServiceFragment extends Fragment implements View.OnClickListener {
         String id = hotelInformation.getHotelId();
         String token = hotelInformation.getAccessToken();
 
-                mViewModel = ViewModelProvider.AndroidViewModelFactory
-                        .getInstance(getActivity().getApplication())
-                        .create(ServicesViewModel.class);
-                 mViewModel.getHotelServices(token,id).observe(this, new Observer<List<HotelService>>() {
-                    @Override
-                    public void onChanged(@Nullable List<HotelService> services) {
-                        adapter = new HotelServiceAdapter(services, getActivity());
-                        rvListService.setAdapter(adapter);
-                        pbLoading.setVisibility(View.INVISIBLE);
-                        showPopupMenu();
-                    }
-                });
+        mViewModel.getServices(token, id).observe(this, new Observer<List<HotelService>>() {
+            @Override
+            public void onChanged(@Nullable List<HotelService> services) {
+                listService = services;
+                if (services == null) {
+                    txtStatus.setVisibility(View.VISIBLE);
+                    return;
+                }
+                adapter = new HotelServiceAdapter(services, getActivity());
+                rvListService.setAdapter(adapter);
+                DividerItemDecoration dividerHorizontal =
+                        new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
+                dividerHorizontal.
+                        setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.devider_recyclerview));
+                rvListService.addItemDecoration(dividerHorizontal);
+                pbLoading.setVisibility(View.INVISIBLE);
+                adapter.setOnItemClickListener(ServiceFragment.this);
+
+            }
+        });
 
 
+    }
+
+    private void deleteService(String token, String serviceId) {
+        mViewModel.deleteService(getActivity(), token, serviceId);
+        updateData();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.fabAddService:
-                break;
-
-            case R.id.btnBack:
-                getActivity().getSupportFragmentManager().popBackStack();
-                break;
-
             default:
+                break;
+        }
+    }
+
+    private void updateData() {
+        mViewModel.getServices(hotelInformation.getAccessToken(), hotelInformation.getHotelId())
+                .observe(getActivity(), new Observer<List<HotelService>>() {
+                    @Override
+                    public void onChanged(@Nullable List<HotelService> services) {
+                        pbLoading.setVisibility(View.VISIBLE);
+                        if (services == null) {
+                            txtStatus.setVisibility(View.VISIBLE);
+                            return;
+                        }
+                        adapter.updateData(services);
+                        pbLoading.setVisibility(View.GONE);
+                    }
+                });
+    }
+
+    @Override
+    public void onItemClicked(int position, View view) {
+        HotelService service = listService.get(position);
+        switch (view.getId()) {
+            case R.id.btn_edit:
+                openEditServiceFragment(service);
+                break;
+
+            case R.id.btn_delete:
+                deleteService(hotelInformation.getAccessToken(), service.getId());
+                break;
+
+            case R.id.ll_content:
+                ServiceDetailFragment detailFragment = ServiceDetailFragment.newInstance(service, hotelInformation);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, detailFragment)
+                        .addToBackStack(null)
+                        .commit();
                 break;
         }
     }

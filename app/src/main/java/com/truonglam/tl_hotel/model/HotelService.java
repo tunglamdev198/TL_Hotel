@@ -2,7 +2,11 @@ package com.truonglam.tl_hotel.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class HotelService {
+import java.io.Serializable;
+
+public class HotelService implements Serializable {
+    @SerializedName("id")
+    private String id;
     @SerializedName("icon")
     private String icon;
 
@@ -16,6 +20,14 @@ public class HotelService {
     private String link;
 
     public HotelService() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getIcon() {
